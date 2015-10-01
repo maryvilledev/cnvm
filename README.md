@@ -74,7 +74,7 @@ Here's a video showing the mechanics in motion:
 
 8. While this is running, please log into each of the additional nodes as your user (again, in our example, "user") and execute:
     ```shell
-    user@hostX~$ wget -qO- 'https://raw.github.com/stlalpha/cnvm/footlocker-bootstrap.bash | sh
+    user@hostX~$ wget -qO- 'https://raw.githubusercontent.com/gonkulator/cnvm/master/footlocker-bootstrap.bash' | sh
     ```
 
 9. Follow the prompts - you will be logged out twice.  Once after docker is installed to get you into the right groups and a second time after the bootstrap configuation is complete
