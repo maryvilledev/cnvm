@@ -32,6 +32,7 @@ Here's a video showing the mechanics in motion:
   - They can live anywhere literally as long as they can see each other (details below)
 - Internet access
 - About 30 minutes of clock time  
+- NOTE: this project currently leverages highly experimental code and local forks - we will incorporate the mainstream changes as the functionality surfaces in the community.
 
 -----
 **Let's Do It!:**  
