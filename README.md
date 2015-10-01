@@ -19,7 +19,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 Here's a video showing the mechanics in motion:
 
-[CNVM - Globetrotter Demo Video ](https://youtu.be/XWYcFxNaNnk "Globetrot v1.6 Demo")
+[CNVM - Globetrotter Demo Video ](https://youtu.be/XWYcFxNaNnk "Globetrot v1.7 Demo")
 
 -----
 
