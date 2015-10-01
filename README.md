@@ -29,6 +29,8 @@ Here's a video showing the mechanics in motion:
 - [Weave](http://weave.works)
 - [Docker](http://docker.io)
 
+<sub>btw - you can execute hot / cold migrations of cnvm's as well as 'classic' microservice containers)</sub>
+
 -----
 
 
