@@ -29,8 +29,8 @@ Here's a video showing the mechanics in motion:
 - [Weave](http://weave.works)
 - [Docker](http://docker.io)  - especially/particularly @boucher 's work and fork
 
-<sub>ps. btw - you can execute hot / cold migrations of cnvm's as well as 'classic' microservice containers)</sub>  
-<sub>pps. sneakers was the internal project name for this effort - hence why you see it in the docs/vids/code</sub>
+<sub>(ps. btw - you can execute hot / cold migrations of cnvm's as well as 'classic' microservice containers)</sub>  
+<sub>(pps. sneakers was the internal project name for this effort - hence why you see it in the docs/vids/code)</sub>
 
 -----
 
