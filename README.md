@@ -21,7 +21,7 @@ Here's a video showing the mechanics in motion:
 
 [CNVM - Globetrotter Demo Video ](https://youtu.be/XWYcFxNaNnk "Globetrot v1.7 Demo")
 
-<b>cnvm is built on top of and from many outstanding open-source projects including:</b>
+<b>cnvm is built on top of, with and from many outstanding open-source projects including:</b>
 
 - Linux
 - [RUNC](https://github.com/opencontainers/runc)
