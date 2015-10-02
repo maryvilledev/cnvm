@@ -150,12 +150,15 @@ sudo install -m 0755 weave /usr/local/bin/weave 2>&1 >/dev/null
 sync
 sleep 2
 mkdir -p ~/sneakers
+
+echo "$USER ALL = (root) NOPASSWD: $HOME/cnvm/demo_onramp.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/cnvm’)
+
 if [ ${master} == "y" ]; then 
     status Master node: setting up .bash_profile to execute sneaker deployment on reboot...
     cat <<EOF >> ~/.bash_profile
 if [ -f ~/UNCONFIGURED ]; then 
     cd cnvm && ./deploynode.sh foo 10.100.101.0/24 && ./deploysneaker.sh ${targets[0]} stlalpha/myphusion:stockticker sneaker01.gonkulator.io 10.100.101.111/24 && cd ~ && rm ~/UNCONFIGURED && rm ~/.SNEAKER_CLONED && rm ~/.DOCKER_INSTALLED && cat ~/.profile > ~/.bash_profile && echo "Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password"
-    ./cnvm/demo_onramp.sh 
+    sudo ./cnvm/demo_onramp.sh 
 fi
 EOF
     touch ~/UNCONFIGURED
