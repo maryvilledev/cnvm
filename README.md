@@ -85,7 +85,7 @@ Here's a video showing the mechanics in motion:
 
 12. When the processes complete, it will log you out from the master and any target nodes.  You are done with the build process, and ready to deploy your first cnvm.
 
-14. Log into the master node, which will automatically launch the first cnvm.  When completed, you can connect to it via the master node at the following IP: 10.100.101.111.
+13. Log into the master node, which will automatically launch the first cnvm.  When completed, you can connect to it via the master node at the following IP: 10.100.101.111.
 
     From the master node:
     ```shell
@@ -93,7 +93,7 @@ Here's a video showing the mechanics in motion:
     ```
     The password is 'password'
 
-15. Open a second ssh session to the master node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
+14. Open a second ssh session to the master node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
 
     ```shell
     user@masternode~$ cd cnvm
@@ -102,4 +102,4 @@ Here's a video showing the mechanics in motion:
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
   - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive - but as soon as the migration has completed, it will be resume since it has been migrated with all of its state to the target node!
  
-16. Congratulations - you live-migrated a running cnvm!
+15. Congratulations - you live-migrated a running cnvm!
