@@ -62,7 +62,7 @@ Here's a video showing the mechanics in motion:
     user@host1~$ wget -qO- https://raw.github.com/gonkulator/cnvm/footlocker-bootstrap.bash | sh
     ```
 
-5. Follow the prompts.  You will be logged out twice.  Once after Docker is installed also adding you into the right groups and a second time after the bootstrap configuation is complete.
+5. Follow the prompts.  You will be logged out twice.  Once after Docker is installed to get you added into the "docker" group and a second time after the bootstrap configuation is complete.
 
 6. When you log back in after Docker bootstrap is installed - you will be prompted to answer whether or not this is the master node.  Answer "y".  It will then ask you to enter your targets.  This is where you enter all of the nodes in your setup.  If you only have two (your master and another) you enter them both here.  If you have 5 (your master and 4 more) you enter all of those here.  The format is one entry per line, and its username@host.  In our example I enter:
     ```shell
