@@ -159,7 +159,7 @@ if [ ${master} == "y" ]; then
 #!/bin/bash
     if [ -f ~/UNCONFIGURED ]; then 
     cd cnvm && ./deploynode.sh foo 10.100.101.0/24 && ./deploysneaker.sh ${targets[0]} stlalpha/myphusion:stockticker sneaker01.gonkulator.io 10.100.101.111/24 && cd ~ && rm ~/UNCONFIGURED && rm ~/.SNEAKER_CLONED && rm ~/.DOCKER_INSTALLED && cat ~/.profile > ~/.bash_profile && echo "Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password"
-    cd ~/cnvm && sudo ./cnvm/demo_onramp.sh 
+    cd ~ && sudo ./cnvm/demo_onramp.sh 
 fi
 EOF
     touch ~/UNCONFIGURED
