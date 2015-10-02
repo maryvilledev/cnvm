@@ -30,7 +30,7 @@ Here's a video showing the mechanics in motion:
 - [Docker](http://docker.io)  - particularly @boucher 's current cr-combined fork
 
 <sub>(P.S. btw - you can execute hot / cold migrations of cnvm's as well as 'classic' microservice containers)</sub>  
-<sub>(P.S. sneakers was the internal project name for this effort - hence why you see it in the docs/vids/code)</sub>
+<sub>(P.P.S. sneakers was the internal project name for this effort - hence why you see it in the docs/vids/code)</sub>
 
 -----
 
