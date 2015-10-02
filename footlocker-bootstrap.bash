@@ -151,7 +151,7 @@ sync
 sleep 2
 mkdir -p ~/sneakers
 
-echo "$USER ALL = (root) NOPASSWD: $HOME/cnvm/demo_onramp.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/cnvm’)
+#echo "$USER ALL = (root) NOPASSWD: $HOME/cnvm/demo_onramp.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/cnvm’)
 
 if [ ${master} == "y" ]; then 
     status Master node: setting up .bash_profile to execute sneaker deployment on reboot...
