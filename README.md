@@ -96,7 +96,6 @@ Here's a video showing the mechanics in motion:
 14. Open a second ssh session to the master node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
 
     ```shell
-    user@masternode~$ cd cnvm
     user@masternode~$ ./teleport.sh sneaker01.gonkulator.io user@<targethost>:/home/user/sneakers
     ```
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
