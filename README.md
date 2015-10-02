@@ -19,7 +19,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 Here's a video showing the mechanics in motion:
 
-[CNVM - Globetrotter Demo Video ](https://youtu.be/XWYcFxNaNnk "Globetrot v1.7 Demo")
+[![CNVM GlobeTrotter Demo Video](http://img.youtube.com/vi/XWYcFxNaNnk/0.jpg)](http://www.youtube.com/watch?v=XWYcFxNaNnk)
 
 <b>cnvm is built on top of and from many outstanding open-source projects including:</b>
 
@@ -74,7 +74,7 @@ Here's a video showing the mechanics in motion:
 
 8. While this is running, please log into each of the target nodes as your user (again, in our example, "user") and execute:
     ```shell
-    user@hostX~$ wget -qO- https://raw.githubusercontent.com/gonkulator/cnvm/master/footlocker-bootstrap.bash | bash
+    user@hostX~$ wget -qO- https://raw.github.com/gonkulator/cnvm/master/footlocker-bootstrap.bash | bash
     ```
 
 9. Follow the prompts.  You will be logged out twice.  Once after Docker is installed also adding you into the right groups and a second time after the bootstrap configuation is complete.
