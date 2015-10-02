@@ -4,6 +4,9 @@
 
 A cnvm is a cloud native virtual machine, that is to say, a virtual machine that is as portable as a container.
 
+[![CNVM GlobeTrotter Demo Video](http://img.youtube.com/vi/XWYcFxNaNnk/0.jpg)](http://www.youtube.com/watch?v=XWYcFxNaNnk)
+
+
 <b>WARNING EXPERIMENTAL:</b>  We are not suggesting this be used in production, yet.  We are adding functionality all the time.  Please help us make it better!
 
 The Cloud Native VM platform allows you to deploy Virtual Machines that are:
@@ -16,10 +19,6 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 - Identical
 - Secure
 - Open and Shared
-
-Here's a video showing the mechanics in motion:
-
-[![CNVM GlobeTrotter Demo Video](http://img.youtube.com/vi/XWYcFxNaNnk/0.jpg)](http://www.youtube.com/watch?v=XWYcFxNaNnk)
 
 <b>cnvm is built on top of and from many outstanding open-source projects including:</b>
 
