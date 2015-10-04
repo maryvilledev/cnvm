@@ -80,7 +80,7 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
     ```
     The password is 'password'
 
-4. Open a second ssh session to the master node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
+4. Open a second ssh session to the master cnvm node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
 
     ```shell
     cnvm@masternode~$ teleport sneaker01.gonkulator.io cnvm@<targethost>:/home/cnvm/sneakers
