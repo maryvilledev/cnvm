@@ -53,6 +53,8 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
 
 >**Note**: Configuration requires the root user's SSH key. If you're using AWS or another provider that doesn't make root the default user, set up a key for root now and use that for these steps.
 
+>**Note 2**: Each of the CNVM nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp
+
 1. Pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
 2. Run the container with the following flags:
     -  `-v /path/to/ROOT/ssh/key:/keys/priv` | Map the node's **root** ssh key to `/keys/priv`
