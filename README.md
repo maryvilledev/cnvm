@@ -47,58 +47,36 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 -----
 
-**Let's Do It!:**  
+#### Let's Do It!
 
-1.  Create N number of Ubuntu 15.04 instances somewhere (vm/bare metal/cloud) 
-    - They must be able to see each other over the network on port 22/tcp, 6783/tcp, and 6783/udp  
-2.  Pick a non-root username to use for the installation (in our example the username will be "user")
-    - This user must be in the sudoers file
-    - You need to generate (or use one that you already have) an ssh keypair and put the public key in each host's ~/.ssh/authorized\_keys file
+We'll use a Docker container running [Ansible](http://ansible.com) to configure our nodes. Alternatively, the playbook can be run directly if you've got Ansible 1.9.3 handy.  All nodes are expected to use the same SSH key.
+>**Note**: Configuration requires the root user's SSH key. If you're using AWS or another provider that doesn't make root the default user, set up a key for root now and use that for these steps.
+1. Pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
+2. Run the container with the following flags:
+    -  `-v /path/to/ROOT/ssh/key:/keys/priv` | Map the node's **root** ssh key to `/keys/priv`
+    -  `-v /path/to/ROOT/ssh/key.pub:/keys/pub` | Map the node's **root** ssh public key to `/keys/pub`
+    -  `-e NODES=1.1.1.1,2.2.2.2,3.3.3.3` | Set `NODES` to a comma-separated list of IP addresses
+    -  The full command should look something like this:
+        ```
+        docker run --rm \
+        -v $HOME/.ssh/id_rsa:/keys/priv \
+        -v $HOME/.ssh/id_rsa.pub:/keys/pub \
+        -e NODES=1.1.1.1,2.2.2.2 gonkulatorlabs/cnvm
+        ```
 
-3. Choose one of your machines to be the "master" node.  This is the machine that you will launch cnvms from.
+3. Once the deployment is complete, use the same root ssh key to log into any node as the cnvm user. On login the first cnvm will automatically launch and the current node will act as the master.  When the script completes, you can connect to it from the node at the following IP: `10.100.101.111`.
 
-4. Log into your master node as "user" and execute:
     ```shell
-    user@host1~$ wget -qO- https://raw.github.com/gonkulator/cnvm/footlocker-bootstrap.bash | bash
-    ```
-
-5. Follow the prompts.  You will be logged out twice.  Once after Docker is installed to get you added into the "docker" group and a second time after the bootstrap configuation is complete.
-
-6. When you log back in after Docker bootstrap is installed - you will be prompted to answer whether or not this is the master node.  Answer "y".  It will then ask you to enter your targets.  This is where you enter all of the nodes in your setup.  If you only have two (your master and another) you enter them both here.  If you have 5 (your master and 4 more) you enter all of those here.  The format is one entry per line, and its username@host.  In our example I enter:
-    ```shell
-    user@172.17.135.138
-    user@172.17.135.139
-    ```
-
-7. The process will now install and configure the remaining software
-
-8. While this is running, please log into each of the target nodes as your user (again, in our example, "user") and execute:
-    ```shell
-    user@hostX~$ wget -qO- https://raw.github.com/gonkulator/cnvm/master/footlocker-bootstrap.bash | bash
-    ```
-
-9. Follow the prompts.  You will be logged out twice.  Once after Docker is installed also adding you into the right groups and a second time after the bootstrap configuation is complete.
-
-10. When you log back in after Docker bootstrap is installed - you will be prompted to answer whether or not this is the master node.  Answer "n"
-
-11. The process will now install and configure the remaining software.  This takes about 15 minutes per node.  You can run them all in parallel if you would like.
-
-12. When the processes complete, it will log you out from the master and any target nodes.  You are done with the build process, and ready to deploy your first cnvm.
-
-13. Log into the master node, which will automatically launch the first cnvm.  When completed, you can connect to it via the master node at the following IP: 10.100.101.111.
-
-    From the master node:
-    ```shell
-    user@masternode~$ ssh user@10.100.101.111
+    cnvm@masternode~$ ssh user@10.100.101.111
     ```
     The password is 'password'
 
-14. Open a second ssh session to the master node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
+4. Open a second ssh session to the master node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
 
     ```shell
-    user@masternode~$ ./teleport.sh sneaker01.gonkulator.io user@<targethost>:/home/user/sneakers
+    cnvm@masternode~$ teleport sneaker01.gonkulator.io cnvm@<targethost>:/home/cnvm/sneakers
     ```
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
-  - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive - but as soon as the migration has completed, it will be resume since it has been migrated with all of its state to the target node!
- 
-15. Congratulations - you live-migrated a running cnvm!
+  - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive. As soon as the migration has completed, it will resume since it has been migrated with all of its state to the target node!
+
+5. Congratulations - you live-migrated a running cnvm!
