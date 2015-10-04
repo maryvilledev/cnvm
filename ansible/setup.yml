@@ -132,7 +132,7 @@
           cd ~/cnvm
             for t in $(cat {{ ansible_user_dir }}/cnvm/targets); do
               if [[ "$t" != "cnvm@{{ ansible_ssh_host }}" ]]; then
-                ssh {{ ansible_ssh_host }} rm -f ~/UNCONFIGURED
+                ssh $t rm -f ~/UNCONFIGURED
               fi
             done
             deploynode foo 10.100.101.0/24 && \
