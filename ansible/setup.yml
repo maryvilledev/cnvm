@@ -1,0 +1,163 @@
+---
+# CNVM Example Playbook
+- name: Run root tasks on remote node
+  hosts: cnvm
+  gather_facts: false
+  remote_user: root
+  vars:
+    # Modify these to your liking
+    cnvm_priv_key: ~/.ssh/id_rsa
+    cnvm_pub_key: ~/.ssh/id_rsa.pub
+  tasks:
+    - name: Install python
+      raw: apt-get update && apt-get install -y python python-pip
+
+    - name: Add groups
+      group: name={{ item }} system=yes
+      with_items:
+        - docker
+        - sudo
+
+    - name: Allow passwordless sudo for sudo group
+      lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
+
+    - name: Create cnvm user
+      user: name=cnvm groups=sudo,docker shell=/bin/bash home=/home/cnvm
+
+    - name: Create cnvm's ~/.ssh dir
+      file: path=/home/cnvm/.ssh state=directory owner=cnvm
+
+    - name: copy priv key to node
+      copy: src={{ cnvm_priv_key }} dest=/home/cnvm/.ssh/id_rsa mode=0400 owner=cnvm
+
+    - name: copy pub key to node
+      copy: src={{ cnvm_pub_key }} dest=/home/cnvm/.ssh/id_rsa.pub owner=cnvm
+
+    - name: Add pub key to cnvm's authorized_keys
+      authorized_key: key="{{ lookup('file', cnvm_pub_key) }}" state=present user=cnvm
+
+- name: Bootstrap cnvm
+  hosts: cnvm
+  remote_user: cnvm
+  vars:
+    source_dir: "{{ ansible_user_dir }}/development/src"
+  tasks:
+    - name: Update system
+      sudo: yes
+      apt: update_cache=yes upgrade=dist
+
+    - name: Install packages (this always displays 'changed' due to https://github.com/ansible/ansible-modules-core/issues/1230)
+      sudo: yes
+      apt: name={{ item }}
+      with_items:
+        - docker.io
+        - git
+        - build-essential
+        - libprotobuf-dev
+        - libprotobuf-c0-dev
+        - protobuf-c-compiler
+        - protobuf-compiler
+        - python-protobuf
+        - curl
+        - nmap
+
+    - name: Clone cnvm repo
+      git:
+        repo: "git@github.com:gonkulator/cnvm.git"
+        dest: "{{ ansible_user_dir }}/cnvm"
+        accept_hostkey: yes
+
+    - name: Link scripts to /usr/bin
+      sudo: yes
+      file: path=/usr/bin/{{ item }} src={{ ansible_user_dir }}/cnvm/{{ item }}.sh state=link mode=0755
+      with_items: 
+        - teleport
+        - demo_onramp
+        - deploynode
+        - deploysneaker
+
+    - name: Create directories
+      file: path={{ item }} state=directory
+      with_items: 
+        - "{{ source_dir }}"
+        - "{{ ansible_user_dir }}/sneakers"
+
+    - name: Clone criu
+      git:
+        repo: "git@github.com:gonkulator/criu.git"
+        dest: "{{ source_dir }}/criu"
+        accept_hostkey: yes
+      register: clone_criu
+
+    - name: Build criu
+      command: /usr/bin/make chdir="{{ source_dir }}/criu"
+      register: criu_make
+      when: clone_criu.changed
+
+    - name: Install criu
+      sudo: yes
+      command: /usr/bin/make install-criu chdir="{{ source_dir }}/criu" creates=/usr/local/sbin/criu
+
+    - name: Checkout docker branch
+      git:
+        repo: "git@github.com:gonkulator/docker.git"
+        dest: "{{ source_dir }}/docker"
+        version: fix-restore-network-cr-combined-1.9
+        accept_hostkey: yes
+      register: clone_docker
+
+    - name: Start Docker
+      sudo: yes
+      service: name=docker state=started
+
+    - name: Build docker - Better get a coffee, this could take 15-30 minutes (depending on VM horsepower)!
+      command: /usr/bin/make DOCKER_EXPERIMENTAL=1 binary chdir={{ source_dir }}/docker creates={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker
+      register: build_docker
+
+    - name: Link experimental docker binary to /usr/bin/docker
+      sudo: yes
+      file: dest=/usr/bin/docker src={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker force=yes state=link mode=0755
+      notify:
+        - Restart docker
+
+    - name: Pull weave binary
+      sudo: yes
+      get_url: dest=/usr/bin/weave mode=0755 owner=root url=http://git.io/weave
+
+    - name: Set bash profile
+      copy:
+        dest: "{{ ansible_user_dir }}/.bash_profile"
+        content: >
+          if [ -f ~/UNCONFIGURED ]; then
+          cd ~/cnvm
+            for t in $(cat {{ ansible_user_dir }}/cnvm/targets); do
+              if [[ "$t" != "cnvm@{{ ansible_ssh_host }}" ]]; then
+                ssh {{ ansible_ssh_host }} rm -f ~/UNCONFIGURED
+              fi
+            done
+            deploynode foo 10.100.101.0/24 && \
+            deploysneaker cnvm@{{ ansible_ssh_host }} stlalpha/myphusion:stockticker sneaker01.gonkulator.io 10.100.101.111/24 && \
+            cat ~/.profile > ~/.bash_profile
+            sudo demo_onramp && \
+              echo "Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password"
+          fi
+
+    - name: Create targets file
+      copy:
+        dest: "{{ ansible_user_dir }}/cnvm/targets"
+        content: "{% for h in groups['cnvm'] %}cnvm@{{ hostvars[h].ansible_ssh_host }}
+          {% endfor %}"
+
+    - name: Add all nodes to known_hosts
+      lineinfile: create=yes dest={{ ansible_user_dir }}/.ssh/known_hosts
+        line='{{ item.ansible_ssh_host }} ssh-rsa {{ item.ansible_ssh_host_key_rsa_public }}'
+        regexp='^{{ item.ansible_ssh_host }}' state=present
+      with_items:  groups['cnvm']
+
+    - name: Touch UNCONFIGURED file
+      file: dest={{ ansible_user_dir }}/UNCONFIGURED state=touch
+
+  handlers:
+    - name: Restart docker
+      sudo: yes
+      service: name=docker state=restarted
