@@ -40,9 +40,10 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 **Things You will need:**
 
 - N number of Ubuntu 15.04 64bit hosts (Minimum of 2 - one master, and at least one target node)
+  - these are referred to as the target cnvm nodes)
   - They can live anywhere literally as long as they can see each other (details below)
-- Another machine to run the installation scripts from (do not run the installation from one of the target cnvm nodes)
-  - This machine needs to have docker installed 
+- An install host, another machine to run the installation scripts from (do not run the installation from one of the target cnvm nodes)
+  - This machine needs to have docker installed
 - Internet access
 - About 30 minutes of clock time (varies based on internet speeds) 
 - <b>NOTE:</b> this project currently leverages highly experimental code and local forks - we will incorporate the mainstream changes as the functionality surfaces in the community.
@@ -55,9 +56,10 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
 
 >**Note**: Configuration requires the root user's SSH key. If you're using AWS or another provider that doesn't make root the default user, set up a key for root now and use that for these steps.
 
->**Note 2**: Each of the CNVM nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp
+>**Note 2**: Each of the target cnvm nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp 
+             The install host must be able to reach each of the cnvm targets over 22/tcp
 
-1. Pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
+1. On the install host, pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
 2. Run the container with the following flags:
     -  `-v /path/to/ROOT/ssh/key:/keys/priv` | Map the node's **root** ssh key to `/keys/priv`
     -  `-v /path/to/ROOT/ssh/key.pub:/keys/pub` | Map the node's **root** ssh public key to `/keys/pub`
