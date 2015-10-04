@@ -20,7 +20,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 - Secure
 - Open and Shared
 
-<b>cnvm is built on top of and from many outstanding open-source projects including:</b>
+<b>cnvm is made possible by many outstanding open-source projects including:</b>
 
 - Linux
 - [RUNC](https://github.com/opencontainers/runc)
