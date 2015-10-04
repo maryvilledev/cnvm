@@ -54,9 +54,9 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 We'll use a Docker container running [Ansible](http://ansible.com) to configure our nodes. Alternatively, the playbook can be run directly if you've got Ansible 1.9.3 handy.  All nodes are expected to use the same SSH key.
 
->**Note**: Configuration requires the root user's SSH key. If you're using AWS or another provider that doesn't make root the default user, set up a key for root now and use that for these steps.
-
->**Note 2**: Each of the target cnvm nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp 
+>**Note**: 
+- Configuration requires the root user's SSH key. If you're using AWS or another provider that doesn't make root the default user, set up a key for root now and use that for these steps.
+-  Each of the target cnvm nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp 
              The install host must be able to reach each of the cnvm targets over 22/tcp
 
 1. On the install host, pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
