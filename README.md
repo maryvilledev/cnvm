@@ -41,7 +41,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 - N number of Ubuntu 15.04 64bit hosts (Minimum of 2 - one master, and at least one target node)
   - They can live anywhere literally as long as they can see each other (details below)
-- A machine to run the installation scripts from
+- Another machine to run the installation scripts from (do not run the installation from one of the target cnvm nodes)
   - This machine needs to have docker installed 
 - Internet access
 - About 30 minutes of clock time (varies based on internet speeds) 
