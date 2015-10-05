@@ -89,3 +89,17 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
   - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive. As soon as the migration has completed, it will resume since it has been migrated with all of its state to the target node!
 
 5. Congratulations - you live-migrated a running cnvm!
+
+
+#### Local demo on Vagrant
+
+In case you don't have the time to set-up VMs in different clouds, you can setup a demo environment with 2 nodes on Vagrant.
+
+```shell
+mkdir cnvm-demo
+curl --silent --location --remote-name https://gist.github.com/errordeveloper/0db09bf7f8b86acd3976/raw/Vagrantfile
+vagrant up
+vagrant ssh cnvm-host-01 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v $HOME/.ssh/id_rsa.pub:/keys/pub -e NODES=172.17.8.102,172.17.8.103 stlalpha/cnvm'
+```
+
+Once built, please jump to step 3 above.
