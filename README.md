@@ -59,7 +59,7 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
 -  Each of the target cnvm nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp 
 - The install host must be able to reach each of the target cnvm nodes over 22/tcp
 
-1. On the install host, pull the deployment container from DockerHub: `docker pull elcolio/cnvm`
+1. On the install host, pull the deployment container from DockerHub: `docker pull stlalpha/cnvm`
 2. On the install host, run the container with the following flags:
     -  `-v /path/to/ROOT/ssh/key:/keys/priv` | Map the node's **root** ssh key to `/keys/priv`
     -  `-v /path/to/ROOT/ssh/key.pub:/keys/pub` | Map the node's **root** ssh public key to `/keys/pub`
@@ -70,7 +70,7 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
         docker run --rm \
         -v $HOME/.ssh/id_rsa:/keys/priv \
         -v $HOME/.ssh/id_rsa.pub:/keys/pub \
-        -e NODES=1.1.1.1,2.2.2.2 gonkulatorlabs/cnvm
+        -e NODES=1.1.1.1,2.2.2.2 stlalpha/cnvm
         ```
 
 3. Once the deployment is complete, use the same root ssh key to log into any target cnvm node as the user "cnvm". On login the first cnvm will automatically launch and the current node will act as the master.  When the script completes, you can connect to it from the node at the following IP: `10.100.101.111`.
