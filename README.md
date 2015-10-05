@@ -97,9 +97,10 @@ In case you don't have the time to set-up VMs in different clouds, you can setup
 
 ```shell
 mkdir cnvm-demo
-curl --silent --location --remote-name https://gist.github.com/errordeveloper/0db09bf7f8b86acd3976/raw/Vagrantfile
+cd cnvm-demo
+curl --silent --location --remote-name https://raw.github.com/gonkulator/cnvm/master/Vagrantfile
 vagrant up
-vagrant ssh cnvm-host-01 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v $HOME/.ssh/id_rsa.pub:/keys/pub -e NODES=172.17.8.102,172.17.8.103 stlalpha/cnvm'
+vagrant ssh cnvm-host-00 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v $HOME/.ssh/id_rsa.pub:/keys/pub -e NODES=172.17.8.101,172.17.8.102 stlalpha/cnvm'
 ```
 
 Once built, please jump to step 3 above.
