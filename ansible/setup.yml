@@ -132,7 +132,7 @@
           cd ~/cnvm
             for t in $(cat {{ ansible_user_dir }}/cnvm/targets); do
               if [[ "$t" != "cnvm@{{ ansible_ssh_host }}" ]]; then
-                ssh $t rm -f ~/UNCONFIGURED
+                ssh $t 'rm -f ~/UNCONFIGURED && cat ~/.profile > ~/.bash_profile'
               fi
             done
             deploynode foo 10.100.101.0/24 && \
@@ -149,10 +149,9 @@
           {% endfor %}"
 
     - name: Add all nodes to known_hosts
-      lineinfile: create=yes dest={{ ansible_user_dir }}/.ssh/known_hosts
-        line='{{ item.ansible_ssh_host }} ssh-rsa {{ item.ansible_ssh_host_key_rsa_public }}'
-        regexp='^{{ item.ansible_ssh_host }}' state=present
-      with_items:  groups['cnvm']
+      copy:
+        dest: "{{ ansible_user_dir }}/.ssh/known_hosts"
+        content: "{{ lookup('file', '~/.ssh/known_hosts') }}"
 
     - name: Touch UNCONFIGURED file
       file: dest={{ ansible_user_dir }}/UNCONFIGURED state=touch
