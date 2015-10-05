@@ -70,7 +70,7 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
         docker run --rm \
         -v $HOME/.ssh/id_rsa:/keys/priv \
         -v $HOME/.ssh/id_rsa.pub:/keys/pub \
-        -e NODES=1.1.1.1,2.2.2.2 stlalpha/cnvm
+        -e NODES=1.1.1.1,2.2.2.2 gonkulatorlabs/cnvm
         ```
 
 3. Once the deployment is complete, use the same root ssh key to log into any target cnvm node as the user "cnvm". On login the first cnvm will automatically launch and the current node will act as the master.  When the script completes, you can connect to it from the node at the following IP: `10.100.101.111`.
@@ -97,9 +97,10 @@ In case you don't have the time to set-up VMs in different clouds, you can setup
 
 ```shell
 mkdir cnvm-demo
-curl --silent --location --remote-name https://gist.github.com/errordeveloper/0db09bf7f8b86acd3976/raw/Vagrantfile
+cd cnvm-demo
+curl --silent --location --remote-name https://raw.github.com/gonkulator/cnvm/master/Vagrantfile
 vagrant up
-vagrant ssh cnvm-host-01 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v $HOME/.ssh/id_rsa.pub:/keys/pub -e NODES=172.17.8.102,172.17.8.103 stlalpha/cnvm'
+vagrant ssh cnvm-host-00 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v $HOME/.ssh/id_rsa.pub:/keys/pub -e NODES=172.17.8.101,172.17.8.102 gonkulatorlabs/cnvm'
 ```
 
 Once built, please jump to step 3 above.
