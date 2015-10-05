@@ -104,3 +104,5 @@ vagrant ssh cnvm-host-00 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v 
 ```
 
 Once built, please jump to step 3 above.
+
+**Note**: `vagrant ssh` will log in as the `vagrant` user.  You'll need to `sudo su - cnvm` to get to the cnvm user as required in steps 3-5 above.
