@@ -59,7 +59,7 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
 -  Each of the target cnvm nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp 
 - The install host must be able to reach each of the target cnvm nodes over 22/tcp
 
-1. On the install host, pull the deployment container from DockerHub: `docker pull stlalpha/cnvm`
+1. On the install host, pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
 2. On the install host, run the container with the following flags:
     -  `-v /path/to/ROOT/ssh/key:/keys/priv` | Map the node's **root** ssh key to `/keys/priv`
     -  `-v /path/to/ROOT/ssh/key.pub:/keys/pub` | Map the node's **root** ssh public key to `/keys/pub`
