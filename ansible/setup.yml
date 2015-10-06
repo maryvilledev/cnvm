@@ -63,7 +63,7 @@
 
     - name: Clone cnvm repo
       git:
-        repo: "git@github.com:gonkulator/cnvm.git"
+        repo: "https://github.com/gonkulator/cnvm.git"
         dest: "{{ ansible_user_dir }}/cnvm"
         accept_hostkey: yes
 
@@ -84,7 +84,7 @@
 
     - name: Clone criu
       git:
-        repo: "git@github.com:gonkulator/criu.git"
+        repo: "https://github.com/gonkulator/criu.git"
         dest: "{{ source_dir }}/criu"
         accept_hostkey: yes
       register: clone_criu
@@ -100,7 +100,7 @@
 
     - name: Checkout docker branch
       git:
-        repo: "git@github.com:gonkulator/docker.git"
+        repo: "https://github.com/gonkulator/docker.git"
         dest: "{{ source_dir }}/docker"
         version: fix-restore-network-cr-combined-1.9
         accept_hostkey: yes
