@@ -3,17 +3,7 @@
 #dcmove repo test 2
 require 'fileutils'
 
-Vagrant.require_version ">= 1.6.0"
-
-#unless Vagrant.has_plugin?("vagrant-aws") and Vagrant.has_plugin?("vagrant-google") and Vagrant.has_plugin?("vagrant-azure") and Vagrant.has_plugin?("vagrant-digitalocean")
-#   puts "-- WARNING --"
-#   puts "This Vagrantfile makes use of the vagrant-aws and vagrant-google plugins."
-#   puts "These packages are necessary to interact with aws and gce"
-#   puts " "
-#   puts "execute: \"vagrant plugin install vagrant-aws\" and"
-#   puts "execute: \"vagrant plugin install vagrant-google\" to continue."
-#   exit
-#end
+Vagrant.require_version ">= 1.7.0"
 
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
 
@@ -115,7 +105,7 @@ config.vm.boot_timeout = 1000
      end
      
      ["digital_ocean"].each do |digital_ocean|
-	config.vm.provider digital_ocean do |z, override|
+	 config.vm.provider digital_ocean do |z, override|
         override.vm.box = "digital_ocean"
 	override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
 	override.vm.box_version = ""
@@ -203,7 +193,6 @@ config.vm.boot_timeout = 1000
        a.vm_size = ENV['AZURE_VM_SIZE']
        a.vm_user = 'azureuser' # defaults to 'vagrant' if not provided
        a.vm_name = vm_name
-	     #a.cloud_service_name = vm_name 
        a.deployment_name = 'gonk'
        a.vm_location = 'West US'
        override.ssh.username = 'azureuser' 
@@ -211,8 +200,6 @@ config.vm.boot_timeout = 1000
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
 	     #a.certificate_file = ENV['AZURE_CERT_FILE']
        a.ssh_port = ssh_port
-    #   a.tcp_endpoints = '22:22, 3389:3389'
-    #   a.udp_endpoints = '3389:3389'
        	end
       end
 
@@ -227,7 +214,6 @@ config.vm.boot_timeout = 1000
 		d.private_networking = true 
 		override.ssh.username = 'root'
 		override.ssh.private_key_path = ENV['DO_OVERRIDE_KEY']
-		#d.user_data = theuserdata
 		d.setup = false
 		end
 	    end
@@ -266,8 +252,6 @@ config.vm.boot_timeout = 1000
     end
 
 #begin provisioner block
-#  config.vm.hostname = vm_name
-#  config.vm.provision :shell, :inline => "hostname #{vm_name} && touch /tmp/iwashere.$$", :privileged => true
 
       (0..$num_instances-1).each do |i|
          config.vm.define vm_name = "%s-%02d" % ["cnvm", i] do |config|
