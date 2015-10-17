@@ -105,7 +105,8 @@ config.vm.boot_timeout = 1000
      end
      
      ["digital_ocean"].each do |digital_ocean|
-	 config.vm.provider digital_ocean do |z, override|
+	 
+   config.vm.provider digital_ocean do |z, override|
         override.vm.box = "digital_ocean"
 	override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
 	override.vm.box_version = ""
@@ -137,8 +138,23 @@ config.vm.boot_timeout = 1000
 #Name the hosts 
 
   (0..$num_instances-1).each do |i|
-    config.vm.define vm_name = "cnvm-%02d" % i do |config|
-      config.vm.hostname = vm_name
+   #config.vm.define vm_name = "cnvm-%02d" % i do |config|
+   config.vm.define vm_name = "%s-%02d" % ["cnvm-host", i] do |config|
+   config.vm.hostname = vm_name
+        ips = %x[echo #{vm_name} >> thehosts]
+        ips = %x[sort -u thehosts > therunninghosts]
+            config.vm.provision "shell", inline: [
+            "hostname #{vm_name}",
+            "echo #{vm_name} > /etc/hostname",
+            "ssh-keygen -f id_rsa -t rsa -N ''",
+             "mkdir -p /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh",
+             "chown $SUDO_USER id_rsa*",
+             "sudo apt-get update -y",
+             "sudo apt-get install docker.io -y",
+             "sudo usermod -aG docker $SUDO_USER",
+             "sudo service docker start",
+             "sudo apt-get install linux-image-extra-$(uname -r) -y"
+            ].join('&&')
       ssh_port = (ssh_port + 1)
   end
 
@@ -198,7 +214,6 @@ config.vm.boot_timeout = 1000
        override.ssh.username = 'azureuser' 
 	     override.ssh.private_key_path = ENV['AZURE_SSH_PRIV_KEY']
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
-	     #a.certificate_file = ENV['AZURE_CERT_FILE']
        a.ssh_port = ssh_port
        	end
       end
@@ -226,8 +241,6 @@ config.vm.boot_timeout = 1000
 		    g.google_key_location = ENV['GC_KEY_LOCATION']
 		    g.machine_type = ENV['GC_MACHINETYPE']
 		    g.image = ENV['GC_IMAGE']
-		    g.name = vm_name
-		    #g.metadata = {'user-data' => theuserdata }
 		    override.ssh.username = "ubuntu"
 		    override.ssh.private_key_path = ENV['GC_OVERRIDE_KEY']
 		    end
@@ -251,24 +264,5 @@ config.vm.boot_timeout = 1000
    
     end
 
-#begin provisioner block
 
-      (0..$num_instances-1).each do |i|
-         config.vm.define vm_name = "%s-%02d" % ["cnvm", i] do |config|
-            config.vm.hostname = vm_name
-            ips = %x[echo #{vm_name} >> thehosts]
-            ips = %x[sort -u thehosts > therunninghosts]
-            config.vm.provision "shell", inline: [
-            "hostname #{vm_name}",
-            "ssh-keygen -f id_rsa -t rsa -N ''",
-             "mkdir -p /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh",
-             "chown $SUDO_USER id_rsa*",
-             "sudo apt-get update -y",
-             "sudo apt-get install docker.io -y",
-             "sudo usermod -aG docker $SUDO_USER",
-             "sudo service docker start",
-             "sudo apt-get install linux-image-extra-$(uname -r) -y"
-            ].join('&&')
-        end
-      end
 end
