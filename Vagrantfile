@@ -73,7 +73,8 @@ end
 
 
 #azure ssh port increment var 
-ssh_port = 9000
+#ssh_port = 9000
+ssh_port = 22
   
 # Defaults Attempt to apply the deprecated environment variable NUM_INSTANCES to
 # $num_instances while allowing config.rb to override it
@@ -135,7 +136,7 @@ config.vm.boot_timeout = 1000
     config.vbguest.auto_update = false
   end
 
-#Name the hosts and setup provisioner
+#Name the hosts and setup provisioner 
 
   (0..$num_instances-1).each do |i|
    #config.vm.define vm_name = "cnvm-%02d" % i do |config|
@@ -155,7 +156,8 @@ config.vm.boot_timeout = 1000
              "sudo service docker start",
              "sudo apt-get install linux-image-extra-$(uname -r) -y"
             ].join('&&')
-      ssh_port = (ssh_port + 1)
+  #   ssh_port = (ssh_port + 1)
+      ssh_port = ssh_port
   end
 
       if $enable_serial_logging
@@ -214,7 +216,7 @@ config.vm.boot_timeout = 1000
        override.ssh.username = 'azureuser' 
 	     override.ssh.private_key_path = ENV['AZURE_SSH_PRIV_KEY']
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
-       a.ssh_port = ssh_port
+      # a.ssh_port = ssh_port
        	end
       end
 
