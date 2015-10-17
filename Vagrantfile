@@ -135,7 +135,7 @@ config.vm.boot_timeout = 1000
     config.vbguest.auto_update = false
   end
 
-#Name the hosts 
+#Name the hosts and setup provisioner
 
   (0..$num_instances-1).each do |i|
    #config.vm.define vm_name = "cnvm-%02d" % i do |config|
