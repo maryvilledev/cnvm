@@ -10,7 +10,8 @@ touch therunninghosts
 
 
 vagrant up --provider=$1
-vagrant reload
+#azure takes so long that vagrant times out - fix this
+#vagrant reload
 
 
 mkdir sshconfigs
