@@ -211,12 +211,12 @@ config.vm.boot_timeout = 1000
        a.vm_size = ENV['AZURE_VM_SIZE']
        a.vm_user = 'azureuser' # defaults to 'vagrant' if not provided
        a.vm_name = vm_name
-       a.deployment_name = 'gonk'
-       a.vm_location = 'West US'
+       a.deployment_name = ENV['AZURE_DEPLOYMENT_NAME']
+       a.vm_location = ENV['AZURE_LOCATION']
        override.ssh.username = 'azureuser' 
 	     override.ssh.private_key_path = ENV['AZURE_SSH_PRIV_KEY']
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
-      # a.ssh_port = ssh_port
+       #a.ssh_port = ssh_port
        	end
       end
 
