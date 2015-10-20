@@ -74,8 +74,6 @@ if provider_is_azure
 end
 
 
-#azure ssh port increment var 
-#ssh_port = 9000
 ssh_port = 22
   
 # Defaults Attempt to apply the deprecated environment variable NUM_INSTANCES to
@@ -92,8 +90,6 @@ Vagrant.configure("2") do |config|
 
 config.vm.box = "boxcutter/ubuntu1504"
 config.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
-#config.ssh
-#config.vm.network :private_network, :type => "dhcp" 
 config.vm.boot_timeout = 1000
 
 
@@ -112,20 +108,20 @@ config.vm.boot_timeout = 1000
      
      ["digital_ocean"].each do |digital_ocean|
 	 
-   config.vm.provider digital_ocean do |z, override|
-        override.vm.box = "digital_ocean"
-	override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-	override.vm.box_version = ""
-	end
+       config.vm.provider digital_ocean do |z, override|
+         override.vm.box = "digital_ocean"
+	       override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+	       override.vm.box_version = ""
+	    end
      end
 
     
      ["azure"].each do |azure|
-	config.vm.provider azure do |q, override|
-        override.vm.box = "azure"
-	override.vm.box_url = "https://github.com/msopentech/vagrant-azure/raw/master/dummy.box"
-	override.vm.box_version = ""
-	end
+	     config.vm.provider azure do |q, override|
+       override.vm.box = "azure"
+	     override.vm.box_url = "https://github.com/msopentech/vagrant-azure/raw/master/dummy.box"
+	     override.vm.box_version = ""
+	     end
      end
 
  ["aws"].each do |aws|
@@ -164,7 +160,6 @@ config.vm.boot_timeout = 1000
              "sudo service docker start",
              "sudo apt-get install linux-image-extra-$(uname -r) -y"
             ].join('&&')
-  #   ssh_port = (ssh_port + 1)
       ssh_port = ssh_port
   end
 
@@ -228,16 +223,16 @@ config.vm.boot_timeout = 1000
      ["digital_ocean"].each do |digital_ocean|
 	config.vm.provider digital_ocean do |d, override|
    		d.token = ENV['DO_TOKEN']
-    		d.image = ENV['DO_IMAGE']
-	    	d.region = ENV['DO_REGION']
-    		d.size = ENV['DO_SIZE']
-		d.root_username = 'root'
-		d.private_networking = true 
-		override.ssh.username = 'root'
-		override.ssh.private_key_path = ENV['DO_OVERRIDE_KEY']
-		d.setup = false
-		end
-	    end
+    	d.image = ENV['DO_IMAGE']
+	    d.region = ENV['DO_REGION']
+    	d.size = ENV['DO_SIZE']
+		  d.root_username = 'root'
+		  d.private_networking = true 
+		  override.ssh.username = 'root'
+		  override.ssh.private_key_path = ENV['DO_OVERRIDE_KEY']
+		  d.setup = false
+		  end
+	 end
      
      ##do the google setup
      ["google"].each do |google|
