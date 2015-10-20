@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # # vi: set ft=ruby :
-#dcmove repo test 2
+#cnvm tech setup multi-cloud support jim@gonkulator.io 10/15/2015
+
 require 'fileutils'
 
 Vagrant.require_version ">= 1.7.0"
