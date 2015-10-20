@@ -6,7 +6,7 @@ require 'fileutils'
 
 Vagrant.require_version ">= 1.7.0"
 
-CONFIG = File.join(File.dirname(__FILE__), "config.rb")
+#CONFIG = File.join(File.dirname(__FILE__), "config.rb")
 
 #what provider are we executing for?
 provider_is_aws  = (!ARGV.nil? && ARGV.join('').include?('provider=aws'))
@@ -17,6 +17,11 @@ provider_is_digital_ocean = (!ARGV.nil? && ARGV.join('').include?('provider=digi
 provider_is_azure = (!ARGV.nil? && ARGV.join('').include?('provider=azure'))
 
 
+#set some virtualbox defaults
+$vb_gui = false
+$vb_memory = 1024
+$vb_cpus = 1
+$num_instances = 3
 
 #complain about missing plugins depending on provider
 if provider_is_aws
@@ -77,15 +82,11 @@ end
 
 ssh_port = 22
   
-# Defaults Attempt to apply the deprecated environment variable NUM_INSTANCES to
-# $num_instances while allowing config.rb to override it
-if ENV["NUM_INSTANCES"].to_i > 0 && ENV["NUM_INSTANCES"]
-  $num_instances = ENV["NUM_INSTANCES"].to_i
-end
 
-if File.exist?(CONFIG)
-  require CONFIG
-end
+
+#if File.exist?(CONFIG)
+#  require CONFIG
+#end
 
 Vagrant.configure("2") do |config|
 
@@ -141,7 +142,6 @@ config.vm.boot_timeout = 1000
 #Name the hosts and setup provisioner 
 
   (0..$num_instances-1).each do |i|
-   #config.vm.define vm_name = "cnvm-%02d" % i do |config|
    config.vm.define vm_name = "%s-%02d" % ["cnvm-host", i] do |config|
    config.vm.hostname = vm_name
    if provider_is_virtualbox
