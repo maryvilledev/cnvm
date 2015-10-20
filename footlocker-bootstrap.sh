@@ -31,6 +31,7 @@ if  [ $# -lt 2 ] ; then
 	exit 1
 fi
 
+export NUM_INSTANCES=$2
 
 #zero the host state files
 touch thehosts
