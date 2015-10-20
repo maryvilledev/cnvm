@@ -39,51 +39,62 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 **Things You will need:**
 
-- N number of Ubuntu 15.04 64bit hosts (Minimum of 2 - one master, and at least one target node)
-  - these are referred to as the target cnvm nodes
+- Access to enough virtual resources to run a minimum of (3) machines
+  - Each machine will need a minimum of 1 CPU, 1 gb of memory and 30gb of disk space
+  - The scripts currently support the following hypervisors and cloud providers:
+  - - VMWare Fusion
+  - - VMWare Workstation
+  - - Virtualbox
+  - - Amazon 
+  - - Google Compute
+  - - Microsoft Azure
+  - - Digital Ocean
   - They can live anywhere literally as long as they can see each other (details below)
-- An install host, another machine to run the installation scripts from (do not run the installation from one of the target cnvm nodes)
-  - This machine needs to have docker installed
-- Internet access
-- About 30 minutes of clock time (varies based on internet speeds) 
+- Vagrant installed on your workstation (current version required: 1.7.4)
+- git installed on your workstation
+- About 30 minutes of clock time (varies based on internet speeds and computing resources) 
 - <b>NOTE:</b> this project currently leverages highly experimental code and local forks - we will incorporate the mainstream changes as the functionality surfaces in the community.
 
 -----
 
 #### Let's Do It!
 
-We'll use a Docker container running [Ansible](http://ansible.com) to configure our nodes. Alternatively, the playbook can be run directly if you've got Ansible 1.9.3 handy.  All nodes are expected to use the same SSH key.
+- Each of the target cnvm footlockers must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp. 
+ - If you are running on a public cloud provider, make sure you have setup access to allow these ports and protocols
 
->**Note**: 
-- Configuration requires the root user's SSH key. If you're using AWS or another provider that doesn't make root the default user, set up a key for root now and use that for these steps.
--  Each of the target cnvm nodes must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp 
-- The install host must be able to reach each of the target cnvm nodes over 22/tcp
+1. On your workstation, clone this repo to a local directory:
 
-1. On the install host, pull the deployment container from DockerHub: `docker pull gonkulatorlabs/cnvm`
-2. On the install host, run the container with the following flags:
-    -  `-v /path/to/ROOT/ssh/key:/keys/priv` | Map the node's **root** ssh key to `/keys/priv`
-    -  `-v /path/to/ROOT/ssh/key.pub:/keys/pub` | Map the node's **root** ssh public key to `/keys/pub`
-    -  `-e NODES=1.1.1.1,2.2.2.2,3.3.3.3` | Set `NODES` to a comma-separated list of IP addresses
+    ```
+    git clone https://github.com/gonkulator/cnvm.git
+    ```
+2. Execute the bootstrap script passing in the argument for the provider you wish to build against
+
     -  The full command should look something like this:
 
         ```
-        docker run --rm \
-        -v $HOME/.ssh/id_rsa:/keys/priv \
-        -v $HOME/.ssh/id_rsa.pub:/keys/pub \
-        -e NODES=1.1.1.1,2.2.2.2 gonkulatorlabs/cnvm
+        user@workstation~$ cd cnvm
+        user@workstation~$ ./footlocker-bootstrap.sh aws 3
         ```
+        <b>NOTE:</b> the script will accept the following as valid arguments: aws, azure, digitalocean, google, virtualbox, vmware_fusion, vmware_workstation
 
-3. Once the deployment is complete, use the same root ssh key to log into any target cnvm node as the user "cnvm". On login the first cnvm will automatically launch and the current node will act as the master.  When the script completes, you can connect to it from the node at the following IP: `10.100.101.111`.
+3. Once the deployment is complete, use vagrant to log into cnvm-host-001 (or any footlocker node other than cnvm-host-00) and then su to the 'cnvm' user. On successful su, the first cnvm will automatically launch.  
 
     ```shell
-    cnvm@masternode~$ ssh user@10.100.101.111
+    user@workstation~$ vagrant ssh cnvm-host-01
+    root@cnvm-host-01# sudo su - cnvm
+    ```
+
+4. When the script completes, you can connect to the running cnvm from the footlocker at the following IP: `10.100.101.111`.
+
+    ```shell
+    cnvm@cnvm-host-01~$ ssh user@10.100.101.111
     ```
     The password is 'password'
 
-4. Open a second ssh session to the master cnvm node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
+5. Open a second ssh session to the cnvm footlocker node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
 
     ```shell
-    cnvm@masternode~$ teleport sneaker01.gonkulator.io cnvm@<targethost>:/home/cnvm/sneakers
+    cnvm@cnvm-host-01~$ ./teleport.sh sneaker01.gonkulator.io cnvm@<targethost>:/home/cnvm/sneakers
     ```
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
   - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive. As soon as the migration has completed, it will resume since it has been migrated with all of its state to the target node!
@@ -91,18 +102,3 @@ We'll use a Docker container running [Ansible](http://ansible.com) to configure 
 5. Congratulations - you live-migrated a running cnvm!
 
 
-#### Local demo on Vagrant
-
-In case you don't have the time to set-up VMs in different clouds, you can setup a demo environment with 2 nodes on Vagrant.
-
-```shell
-mkdir cnvm-demo
-cd cnvm-demo
-curl --silent --location --remote-name https://raw.github.com/gonkulator/cnvm/master/Vagrantfile
-vagrant up
-vagrant ssh cnvm-host-00 -c 'docker run --rm -v $HOME/.ssh/id_rsa:/keys/priv -v $HOME/.ssh/id_rsa.pub:/keys/pub -e NODES=172.17.8.101,172.17.8.102 gonkulatorlabs/cnvm'
-```
-
-Once built, please jump to step 3 above.
-
-**Note**: `vagrant ssh` will log in as the `vagrant` user.  You'll need to `sudo su - cnvm` to get to the cnvm user as required in steps 3-5 above.
