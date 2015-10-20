@@ -71,9 +71,9 @@ echo "Building...."
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm"
 
 echo "Cleaning up..."
-#rm sshconfigs/*
-#rm thekeys/id_rsa*
-#rm thehosts
-#rm therunninghosts
+rm sshconfigs/*
+rm thekeys/id_rsa*
+rm thehosts
+rm therunninghosts
 
 echo "Done."
