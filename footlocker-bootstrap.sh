@@ -1,5 +1,35 @@
 #!/bin/sh
-#dc mass footlocker bootstrap
+#mass footlocker bootstrap - arbitrary hosts and providers
+#jim@gonkulator.io 10/20/2015
+
+
+usage()
+{
+echo ""
+echo "Usage: $0 provider instances"
+echo "e.g., $0 aws 3"
+echo "This would build a total of three nodes on AWS.  One control node and two footlocker hosts for cnvm's"
+echo ""
+echo "See https://github.com/gonkulator/cnvm for spceifics on configuration for each provider"
+echo ""
+echo "Valid provider values are:"
+echo "aws - Amazon Web Services"
+echo "azure - Microsoft Azure"
+echo "digitalocan - Digital Ocean"
+echo "google - Google Compute Engine"
+echo "virtualbox - Oracle VirtualBox"
+echo "vmware_fusion - VMWare Fusion [requires addl vagrant license]"
+echo "vmware_workstation - VMWare Workstation [requires addl vagrant license]"
+echo ""
+exit 1
+}
+
+
+
+if  [ $# -lt 2 ] ; then
+	usage
+	exit 1
+
 
 
 #zero the host state files
