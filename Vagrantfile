@@ -92,8 +92,8 @@ Vagrant.configure("2") do |config|
 
 config.vm.box = "boxcutter/ubuntu1504"
 config.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
-#config.vm.forward_port("ssh",22,2222,{:auto => true,:adapter => 2})
-config.vm.network :private_network, :type => "dhcp" 
+#config.ssh
+#config.vm.network :private_network, :type => "dhcp" 
 config.vm.boot_timeout = 1000
 
 
@@ -147,11 +147,9 @@ config.vm.boot_timeout = 1000
    #config.vm.define vm_name = "cnvm-%02d" % i do |config|
    config.vm.define vm_name = "%s-%02d" % ["cnvm-host", i] do |config|
    config.vm.hostname = vm_name
-        if provider_is_virtualbox
-           #config.vm.network :private_network, ip: "172.17.8.#{i+100}"
-         #  config.vm.network :private_network, ip: "172.17.8.111"
-        #   config.vm.forward_port("ssh",22,2222,{:auto => true,:adapter => 2})
-           end
+   if provider_is_virtualbox
+    config.vm.network :private_network, ip: "172.17.8.#{i+100}"
+  end
         ips = %x[echo #{vm_name} >> thehosts]
         ips = %x[sort -u thehosts > therunninghosts]
             config.vm.provision "shell", inline: [
