@@ -15,12 +15,14 @@ provider_is_google = (!ARGV.nil? && ARGV.join('').include?('provider=google'))
 provider_is_digital_ocean = (!ARGV.nil? && ARGV.join('').include?('provider=digital_ocean'))
 provider_is_azure = (!ARGV.nil? && ARGV.join('').include?('provider=azure'))
 
+
+
 #complain about missing plugins depending on provider
 if provider_is_aws
 	 unless Vagrant.has_plugin?("vagrant-aws") 
-	  # great plugin routine from https://github.com/WhoopInc/s3auth
+	    # great plugin routine from https://github.com/WhoopInc/s3auth
   	  # Attempt to install ourself. Bail out on failure so we don't get stuck in an
-	  # infinite loop.
+	    # infinite loop.
 	    puts "Did not detect vagrant-aws plugin..."
 	    system('vagrant plugin install vagrant-aws') || exit!
 
@@ -90,7 +92,10 @@ Vagrant.configure("2") do |config|
 
 config.vm.box = "boxcutter/ubuntu1504"
 config.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
+#config.vm.forward_port("ssh",22,2222,{:auto => true,:adapter => 2})
+config.vm.network :private_network, :type => "dhcp" 
 config.vm.boot_timeout = 1000
+
 
   config.vm.provider :vmware_fusion do |vb, override|
   override.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
@@ -142,6 +147,11 @@ config.vm.boot_timeout = 1000
    #config.vm.define vm_name = "cnvm-%02d" % i do |config|
    config.vm.define vm_name = "%s-%02d" % ["cnvm-host", i] do |config|
    config.vm.hostname = vm_name
+        if provider_is_virtualbox
+           #config.vm.network :private_network, ip: "172.17.8.#{i+100}"
+         #  config.vm.network :private_network, ip: "172.17.8.111"
+        #   config.vm.forward_port("ssh",22,2222,{:auto => true,:adapter => 2})
+           end
         ips = %x[echo #{vm_name} >> thehosts]
         ips = %x[sort -u thehosts > therunninghosts]
             config.vm.provision "shell", inline: [
@@ -175,8 +185,8 @@ config.vm.boot_timeout = 1000
         end
 
         config.vm.provider :virtualbox do |vb, override|
-          vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
-          vb.customize ["modifyvm", :id, "--uartmode1", serialFile]
+          vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
+          vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
         end
       end
 
@@ -193,9 +203,6 @@ config.vm.boot_timeout = 1000
         vb.memory = $vb_memory
         vb.cpus = $vb_cpus
       end
-
-      ip = "172.17.8.#{i+100}"
-      config.vm.network :private_network, ip: ip
 
       #disable synced folders
       config.vm.synced_folder '.', '/vagrant', disabled: true
@@ -218,7 +225,6 @@ config.vm.boot_timeout = 1000
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
        #a.ssh_port = ssh_port
        	end
-      end
 
  ##do the digital_ocean setup
      ["digital_ocean"].each do |digital_ocean|
@@ -266,5 +272,5 @@ config.vm.boot_timeout = 1000
    
     end
 
-
+end
 end
