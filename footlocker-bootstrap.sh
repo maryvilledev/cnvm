@@ -29,7 +29,7 @@ exit 1
 if  [ $# -lt 2 ] ; then
 	usage
 	exit 1
-
+fi
 
 
 #zero the host state files
