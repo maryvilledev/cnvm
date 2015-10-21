@@ -42,13 +42,13 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 - Access to enough virtual resources to run a minimum of (3) machines
   - Each machine will need a minimum of 1 CPU, 1 gb of memory and 30gb of disk space
   - The scripts currently support the following hypervisors and cloud providers:
-  - - VMWare Fusion
-  - - VMWare Workstation
-  - - Virtualbox
-  - - Amazon 
-  - - Google Compute
-  - - Microsoft Azure
-  - - Digital Ocean
+    - VMWare Fusion
+    - VMWare Workstation
+    - Virtualbox
+    - Amazon 
+    - Google Compute
+    - Microsoft Azure
+    - Digital Ocean
   - They can live anywhere literally as long as they can see each other (details below)
 - Vagrant installed on your workstation (current version required: 1.7.4)
 - git installed on your workstation
