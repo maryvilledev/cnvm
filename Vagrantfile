@@ -21,7 +21,9 @@ provider_is_azure = (!ARGV.nil? && ARGV.join('').include?('provider=azure'))
 $vb_gui = false
 $vb_memory = 1024
 $vb_cpus = 1
-$num_instances = 3
+
+#read the number of builds from env - this is set by footlockerbootstrap.sh
+$num_instances=ENV['NUM_FOOTLOCKERS'].to_i
 
 #complain about missing plugins depending on provider
 if provider_is_aws
