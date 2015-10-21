@@ -98,27 +98,33 @@
       sudo: yes
       command: /usr/bin/make install-criu chdir="{{ source_dir }}/criu" creates=/usr/local/sbin/criu
 
-    - name: Checkout docker branch
-      git:
-        repo: "https://github.com/gonkulator/docker.git"
-        dest: "{{ source_dir }}/docker"
-        version: fix-restore-network-cr-combined-1.9
-        accept_hostkey: yes
-      register: clone_docker
+    # - name: Checkout docker branch
+    #   git:
+    #     repo: "https://github.com/gonkulator/docker.git"
+    #     dest: "{{ source_dir }}/docker"
+    #     version: fix-restore-network-cr-combined-1.9
+    #     accept_hostkey: yes
+    #   register: clone_docker
 
-    - name: Start Docker
+    # - name: Build docker - Better get a coffee, this could take 15-30 minutes (depending on VM horsepower)!
+    #   command: /usr/bin/make DOCKER_EXPERIMENTAL=1 binary chdir={{ source_dir }}/docker creates={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker
+    #   register: build_docker
+
+    - name: Stop Docker
       sudo: yes
-      service: name=docker state=started
+      service: name=docker state=stopped
 
-    - name: Build docker - Better get a coffee, this could take 15-30 minutes (depending on VM horsepower)!
-      command: /usr/bin/make DOCKER_EXPERIMENTAL=1 binary chdir={{ source_dir }}/docker creates={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker
-      register: build_docker
-
-    - name: Link experimental docker binary to /usr/bin/docker
+    - name: Get custom Docker binary
       sudo: yes
-      file: dest=/usr/bin/docker src={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker force=yes state=link mode=0755
+      get_url: dest=/usr/bin/docker force=yes url=https://bintray.com/artifact/download/colebrumley/CNVM_Docker/pre-release-1/docker
       notify:
         - Restart docker
+
+    # - name: Link experimental docker binary to /usr/bin/docker
+    #   sudo: yes
+    #   file: dest=/usr/bin/docker src={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker force=yes state=link mode=0755
+    #   notify:
+    #     - Restart docker
 
     - name: Pull weave binary
       sudo: yes
