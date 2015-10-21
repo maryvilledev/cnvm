@@ -21,6 +21,9 @@ echo "virtualbox - Oracle VirtualBox"
 echo "vmware_fusion - VMWare Fusion [requires addl vagrant license]"
 echo "vmware_workstation - VMWare Workstation [requires addl vagrant license]"
 echo ""
+echo "You can also execute: $0 hybrid-demo"
+echo "This will create 3 nodes, two on virtualbox and a third on AWS to show inter-cloud/hypervisor capabilities!"
+echo "See https://github.com/gonkulator/cnvm for details!"
 exit 1
 }
 
@@ -40,7 +43,16 @@ touch therunninghosts
 >therunninghosts
 
 
-vagrant up --provider=$1
+#if we are running the split hybrid demo - create two local virtualbox instances and an AWS instance
+if [ $1 = "hybrid-demo" ] ; then
+	vagrant up cnvm-host-00 --provider=virtualbox
+	vagrant up cnvm-host-01 --provider=virtualbox
+	vagrant up cnvm-host-02 --provider=aws
+else
+	vagrant up --provider=$1
+fi
+
+
 #azure takes so long that vagrant times out - fix this
 #vagrant reload
 
@@ -88,23 +100,34 @@ echo "Keyscanning master to targets..."
 scp -P ${masterport} -i ${mastersshkey} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes thekeys/*.sh ${masteruser}@${masterip}:.
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes "sudo ~/keyscanner.sh ${keyscantargets}"
 
-echo "Kicking off Cloud Native VM footlocker builds..."
-#virtualbox is special - so get the private network ip's of the arbitrary nodes using vboxmanage - ick! - and plug them in here otherwise carry on...
-if [ $1 = "virtualbox" ] ; then
-	thehassle=$(for i in $(ls sshconfigs/ | grep -v cnvm-host-00 | sed s/-sshconfig//g) ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
-	footlockertargets=$(echo ${thehassle} | sed s/\ /,/g)
-else
-footlockertargets=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
-fi
+	echo "Kicking off Cloud Native VM footlocker builds..."
+	#virtualbox is special - so get the private network ip's of the arbitrary nodes using vboxmanage - ick! - and plug them in here otherwise carry on...
+	if [ $1 = "virtualbox" ] ; then
+		thehassle=$(for i in $(ls sshconfigs/ | grep -v cnvm-host-00 | sed s/-sshconfig//g) ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
+		footlockertargets=$(echo ${thehassle} | sed s/\ /,/g)
+	elif [ $1 = "hybrid-demo" ] ; then
+		#And if we are doing the hybrid-demo then we have to deal with the specialness of virtualbox and bridge the gap to AWS
+		thehassle=$(for i in cnvm-host-01 ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
+		thehassle2=$(echo ${thehassle} | sed s/\ /,/g)
+		thehassle3=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00 | grep -v cnvm-host-01 ) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
+		footlockertargets=${thehassle2},${thehassle3}
+	else
+	footlockertargets=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
+	fi
+
 echo "Pulling build container...."
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes "docker pull gonkulatorlabs/cnvm"
 echo "Building...."
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm"
 
+
+if [ $3 != "debug" ] ; then
 echo "Cleaning up..."
 rm sshconfigs/*
 rm thekeys/id_rsa*
 rm thehosts
 rm therunninghosts
-
 echo "Done."
+else
+	echo "done"
+fi
