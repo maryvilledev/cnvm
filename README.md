@@ -67,7 +67,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
     ```
     git clone https://github.com/gonkulator/cnvm.git
     ```
-2. Execute the bootstrap script passing in the argument for the provider you wish to build against
+2. Execute the bootstrap script passing in the argument for the provider you wish to build against and the number of footlocker nodes (remember that one will be the build node, so you will end up with N - 1 usable footlocker nodes)
 
     -  The full command should look something like this:
 
