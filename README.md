@@ -110,7 +110,71 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 -----
 
-#Provider-Specific How-To's
+#Cloud Provider-Specific Setups
 
 ##AWS
 
+You need a set of access credentials with access to a vpc and region for you to deploy.  The AWS_SECURITYGROUP that you select should have port 22/tcp and 6783/tcp and 6783/udp open for connectivity from all nodes.
+
+
+And you need to have the following environmental variables set:
+
+```
+export AWS_KEY=<INSERT VALUE HERE>
+export AWS_AMI=<UBUNTU 15.04 Vivid x64 Server AMI IMAGE> - I used ami-01729c45 in US-WEST
+export AWS_REGION=<AWS REGION>
+export AWS_SECURITYGROUP=<VPC SECURITY GROUP>
+export AWS_INSTANCE=<INSTANCE TYPE>t2.medium
+export AWS_KEYPATH=<PATH TO YOUR .PEM FILE THAT MATCHES YOUR AWS_KEYNAME BELOW>
+export AWS_KEYNAME=<SSH KEY PAIR NAME>
+export AWS_ACCESS_KEY=<AWS ACCESS KEY>
+export AWS_SECRET_KEY=<AWS SECRET KEY>
+```
+
+##Digital Ocean
+
+You need to create an access token from the administrative login.
+
+You need the following environment variables set:
+
+```
+DO_OVERRIDE_KEY=<PATH TO SSH KEY YOU WISH TO USE>
+DO_SIZE=2GB
+DO_REGION=<DATACENTER YOU WANT TO USE - I USED NY3 FOR TESTING>
+DO_IMAGE=ubuntu-15-04-x64
+DO_TOKEN=<YOUR DIGITAL OCEAN API TOKEN>
+```
+
+##Google Compute Engine
+
+You need to create a project and give it access to the Google Compute API and your client email address.  You will setup a service account that has compute access API - thats the GC_CLIENT_EMAIL that you enter below.  When setting up the API access you will create a client KEY to identify you - and that file is what you reference below as GC_KEY_LOCATION.
+
+You will need the following environment variables set:
+
+```
+export GC_PROJECT=<PROJECT NAME>
+export GC_CLIENT_EMAIL=<CLIENT EMAIL>
+export GC_KEY_LOCATION=<PATH TO API ACCOUNT CERT FILE DESCRIBED ABOVE>
+export GC_IMAGE='ubuntu-1504-vivid-v20150911'
+export GC_OVERRIDE_KEY=<THE SSH KEY YOU WANT TO USE TO LOGIN TO THE MACHINES>
+export GC_MACHINETYPE='n1-standard'
+```
+
+##Microsoft Azure
+
+You will need to have created an azure Management Certificate and uploaded it to Azure.  See [this link](https://github.com/Azure/vagrant-azure) for specific instructions on how to generate a management certificate.  You will also need your Azure Subscription ID.
+
+You will need the following environment variables set:
+
+```
+export AZURE_MGMT_CERT=<PATH TO MANAGENT CERT FILE>
+export AZURE_MGMT_ENDPOINT='https://management.core.windows.net'
+export AZURE_SUB_ID=<AZURE SUBSCRIPTION ID>
+export AZURE_DEPLOYMENT_NAME='gonkcnvm'
+export AZURE_LOCATION=<AZURE LOCATION - I used 'Central US'>
+export AZURE_STORAGE_ACCT='gonk2'
+export AZURE_VM_IMAGE='b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu_DAILY_BUILD-vivid-15_04-amd64-server-20150917-en-us-30GB'
+export AZURE_SSH_PRIV_KEY=<PATH TO AZURE RSA PRIV KEY YOU WANT TO USE FOR LOGIN>
+export AZURE_PRIV_KEY=<PATH TO AZURE RSA PRIV KEY YOU WANT TO USE FOR LOGIN>
+export AZURE_CERT_FILE=<PATH TO AZURE RSA PRIV KEY YOU WANT TO USE FOR LOGIN>
+export AZURE_VM_SIZE='Standard_D1'
