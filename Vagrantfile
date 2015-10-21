@@ -23,7 +23,7 @@ $vb_memory = 1024
 $vb_cpus = 1
 
 #read the number of builds from env - this is set by footlockerbootstrap.sh
-$num_instances = 2
+$num_instances = 3
 
 if ENV["NUM_FOOTLOCKERS"].to_i > 0 && ENV["NUM_FOOTLOCKERS"]
   $num_instances = ENV["NUM_FOOTLOCKERS"].to_i
