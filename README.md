@@ -204,9 +204,9 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 #n-node-method
 
-***Want to setup your own N-node test environment on and play with it?***
+***Want to setup your own N-node test environment on the provider of your choice and play with it?***
 
-**hybrid-cloud-method minimum requirements:**
+**n-node-method minimum requirements:**
 
 - A Linux or Mac OSX workstation
 - Vagrant installed on your workstation (current version required: 1.7.4)
