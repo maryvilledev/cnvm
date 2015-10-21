@@ -39,21 +39,22 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 **Things You will need:**
 
-- Access to enough virtual resources to run a minimum of (3) machines or 'footlockers'
+- A Linux or Mac OSX workstation
+- Access to enough virtual resources (not necessarily on the local workstation) to run a minimum of (3) machines or 'footlockers'
     - <b>What's a footlocker?</b>  It's a host that is capable of running cnvm's
   - Each machine will need a minimum of 1 CPU, 1 gb of memory and 30gb of disk space
- >- The scripts currently support the following hypervisors and cloud providers:
-    - VMWare Fusion
-    - VMWare Workstation
-    - Virtualbox
+  - The scripts currently support the following hypervisors and cloud providers:
+    - VMWare Fusion (local workstation)
+    - VMWare Workstation (local workstation)
+    - Virtualbox (local workstation)
     - Amazon 
     - Google Compute
     - Microsoft Azure
     - Digital Ocean
-  - They can live anywhere literally as long as they can see each other (details below)
+  - They can live anywhere literally as long as they can see each other over the network (details below)
 - Vagrant installed on your workstation (current version required: 1.7.4)
 - git installed on your workstation
-- About 30 minutes of clock time (varies based on internet speeds and computing resources) 
+- About 40 minutes of clock time (varies based on internet speeds and computing resources) 
 - <b>NOTE:</b> this project currently leverages highly experimental code and local forks - we will incorporate the mainstream changes as the functionality surfaces in the community.
 
 -----
