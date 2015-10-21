@@ -187,6 +187,8 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 10. Your cnvm terminal window will now be responsive again, the session never died, and your cvnm is now live in AWS!
 
+You just live-migrated a cnvm from your local workstation, wherever that is in the world, to AWS, wherever you defined in the world, without losing any state information.  The cpu, memory, disk and network states were all transferred!
+
 -----
 
 ***Want to setup your own N-node test environment on and play with it?***
@@ -330,7 +332,7 @@ export AZURE_SUB_ID=<AZURE SUBSCRIPTION ID>
 export AZURE_DEPLOYMENT_NAME='gonkcnvm'
 export AZURE_LOCATION=<AZURE LOCATION - I used 'Central US'>
 export AZURE_STORAGE_ACCT='gonk2'
-export AZURE_VM_IMAGE='b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu_DAILY_BUILD-vivid-15_04-amd64-server-20150917-en-us-30GB'
+export AZURE_VM_IMAGE='b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-15_04-amd64-server-20151021-en-us-30GB'
 export AZURE_SSH_PRIV_KEY=<PATH TO AZURE RSA PRIV KEY YOU WANT TO USE FOR LOGIN>
 export AZURE_PRIV_KEY=<PATH TO AZURE RSA PRIV KEY YOU WANT TO USE FOR LOGIN>
 export AZURE_CERT_FILE=<PATH TO AZURE RSA PRIV KEY YOU WANT TO USE FOR LOGIN>
