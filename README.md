@@ -112,6 +112,8 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 #Cloud Provider-Specific Setups
 
+Read the details below for the provider you want to use.  Set these environment variables BEFORE running footlocker-bootstrap.sh.
+
 ##AWS
 
 You need a set of access credentials with access to a vpc and region for you to deploy.  The AWS_SECURITYGROUP that you select should have port 22/tcp and 6783/tcp and 6783/udp open for connectivity from all nodes.
@@ -121,7 +123,7 @@ And you need to have the following environmental variables set:
 
 ```
 export AWS_KEY=<INSERT VALUE HERE>
-export AWS_AMI=<UBUNTU 15.04 Vivid x64 Server AMI IMAGE> - I used ami-01729c45 in US-WEST
+export AWS_AMI=<UBUNTU 15.04 Vivid x64 Server AMI IMAGE in your region> - I used ami-01729c45 in US-WEST
 export AWS_REGION=<AWS REGION>
 export AWS_SECURITYGROUP=<VPC SECURITY GROUP>
 export AWS_INSTANCE=<INSTANCE TYPE>t2.medium
@@ -147,7 +149,7 @@ DO_TOKEN=<YOUR DIGITAL OCEAN API TOKEN>
 
 ##Google Compute Engine
 
-You need to create a project and give it access to the Google Compute API and your client email address.  You will setup a service account that has compute access API - thats the GC_CLIENT_EMAIL that you enter below.  When setting up the API access you will create a client KEY to identify you - and that file is what you reference below as GC_KEY_LOCATION.
+You need to create a project and give it access to the Google Compute API and your client email address.  You will setup a service account that has compute access API - thats the GC_CLIENT_EMAIL that you enter below.  When setting up the API access you will create a client KEY to identify you - and that file is what you reference below as GC_KEY_LOCATION.  You need to have a firewall rules set on the project's default network that allow 22/tcp and 6783/tcp and 6783/udp from the world. 
 
 You will need the following environment variables set:
 
@@ -162,7 +164,7 @@ export GC_MACHINETYPE='n1-standard'
 
 ##Microsoft Azure
 
-You will need to have created an azure Management Certificate and uploaded it to Azure.  See [this link](https://github.com/Azure/vagrant-azure) for specific instructions on how to generate a management certificate.  You will also need your Azure Subscription ID.
+You will need to have created an azure Management Certificate and uploaded it to Azure.  See [this link](https://github.com/Azure/vagrant-azure) for specific instructions on how to generate a management certificate.  You will also need your Azure Subscription ID.  You will need to have tcp endpoints created to allow 22/tcp, 6783/tcp and 6783/udp access from the world.
 
 You will need the following environment variables set:
 
