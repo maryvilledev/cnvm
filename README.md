@@ -34,15 +34,165 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 -----
 
+**We have put together a set of scripts that will build it for you on most any hypervisor or cloud provider**
+
+
+***If you want to try CNVM out using our automated hybrid-cloud creator (using Virtualbox and AWS):***
+
+**Things you will need:**
+
+- A Linux or Mac OSX workstation
+  - 2 gb of available memory, 20gb of available disk space
+- Vagrant installed on your workstation (current version required: 1.7.4)
+- Virtualbox installed on your workstation
+- The git client installed on your workstation
+- An AWS account
+ - An AWS security group configured in the that allows 22/tcp, 6783/tcp and 6783/udp from the world
+
+----
+#### Let's Run The Hybrid Demo!
+
+
+1. Set the following environment variables to reflect the correct settings for your AWS account
+
+  ```
+  export AWS_AMI=<UBUNTU 15.04 Vivid x64 Server AMI IMAGE in your region> - I used ami-01729c45 in US-WEST
+  export AWS_REGION=<AWS REGION>
+  export AWS_SECURITYGROUP=<VPC SECURITY GROUP>
+  export AWS_INSTANCE=t2.medium
+  export AWS_KEYPATH=<PATH TO YOUR .PEM FILE THAT MATCHES YOUR AWS_KEYNAME BELOW>
+  export AWS_KEYNAME=<SSH KEY PAIR NAME>
+  export AWS_ACCESS_KEY=<AWS ACCESS KEY>
+  export AWS_SECRET_KEY=<AWS SECRET KEY>
+  ```
+2. Clone the cnvm repo on your workstation:
+ ```
+ user@workstation:~$: git clone https://github.com/gonkulator/cnvm.git
+ ```
+3. Change into the cnvm directory, and execute the boostrap script as follows:
+
+ ```
+ user@workstation:~$: cd cnvm
+ user@workstation:~/cnvm$: ./footlocker-bootstrap.sh hybrid-demo
+ ```
+
+4. This will kick off the build of (3) hosts.  A build host and two footlockers.  A footlocker is a host that is prepped to host cnvms.  This step will take approximately 10 minutes depending on your local workstation horsepower and network connectivity.  When completed you will be returned to the prompt, and you may now log into cnvm-host-01 to deploy your first cnvm:
+
+```
+user@workstation~/cnvm$: vagrant ssh cnvm-host-01
+```
+
+5. You will be greeted with an Ubuntu banner, and you need to su to the 'cnvm' user to establish the network overlay and launch the initial cnvm.  Upon successful 'su', a script will fire automatically to do this.  When complete you will be notified that the initial cnvm is online, its ip address and password.  
+
+```
+Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+----------------------------------------------------------------
+  Ubuntu 15.04                                built 2015-10-04
+----------------------------------------------------------------
+vagrant@cnvm-host-01:~$ sudo su - cnvm
+[o] Starting weave on 172.17.8.101
+Unable to find image 'weaveworks/weaveexec:1.1.2' locally
+1.1.2: Pulling from weaveworks/weaveexec
+511136ea3c5a: Pulling fs layer
+c9fa955c112e: Pulling fs layer
+296b35397bd8: Pulling fs layer
+5c0137366a00: Pulling fs layer
+>>TEXT CLIPPED FOR BREVITY<<<
+Status: Downloaded newer image for stlalpha/myphusion:stockticker
+[o] Attaching global hostname and IP sneaker01.gonkulator.io/10.100.101.111/24
+10.100.101.111
+[o] Setting cnvm hostname
+[o] Success
+[o] cnvm online @ 10.100.101.111/24
+Forwarding local port 22 to 10.100.101.111:2222
+Forwarding local port 80 to 10.100.101.111:8080
+Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password
+cnvm@cnvm-host-01:~/cnvm$
+```
+6. You have successfully launched your first cnvm!  You can log into it by ssh'ing to 10.100.101.111 username: user password: password
+```
+cnvm@cnvm-host-01:~/cnvm$ ssh user@10.100.101.111
+The authenticity of host '10.100.101.111 (10.100.101.111)' can't be established.
+ECDSA key fingerprint is 4a:c8:c8:f8:19:29:3f:f4:80:de:e6:38:bc:e7:e5:e5.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.100.101.111' (ECDSA) to the list of known hosts.
+user@10.100.101.111's password:
+Last login: Sun Sep 13 17:13:06 2015 from 172.17.42.1
+user@sneaker01:~$
+```
+7.  Stay logged in, and open another terminal window, and use vagrant to connect to cnvm-host-01 again, and su to 'cnvm'
+
+```
+user@workstation:~$ cd cnvm
+user@workstation:~/cnvm$ vagrant ssh cnvm-host-01
+Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+----------------------------------------------------------------
+  Ubuntu 15.04                                built 2015-10-04
+----------------------------------------------------------------
+vagrant@cnvm-host-01:~$ sudo su - cnvm
+cnvm@cnvm-host-01:~$
+```
+8. From this new session, you are going to live migrate (teleport) your cnvm from your Virtualbox instance, into AWS - by executing:
+
+```
+cnvm@cnvm-host-01:~$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
+```
+
+9. As the command executes, you will notice that in your first terminal window (the one logged into the cnvm) the session becomes unresponsive, as time has frozen and it is being transported across the network to AWS.  Fear not - it will come alive again once it has reached the far side.  You will see the following in the teleport terminal session:
+
+```
+cnvm@cnvm-host-01:~/cnvm$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
+[o] Checking remote site
+[o] Checking remote landing-zone...
+Warning: Permanently added '10.100.101.2' (ECDSA) to the list of known hosts.
+[o] Remote landing zone OK
+[o] Sanitizing site
+[o] Sanitizing cnvm@10.100.101.2
+[o] Snapshotting sneaker: 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+[o] Setting up local landing-zone...
+[o] Checkpointing sneaker 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+[o] Checkpoint success...
+[o] Registering sneaker image...
+[o] Streaming sneaker image...
+[o] Streaming sneaker image COMPLETE
+[o] Teleporting sneaker: 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+[o] Transferring machine state information....
+[o] Machine state information transfer COMPLETE
+[o] Creating remote surrogate...
+[o] Remote surrogate creation de3036ef6df035377b2996283af7f87bbbf0ce57547618058638553b43bdc336 COMPLETE
+[o] Restoring instance run state...
+[o] Instance run state restoration COMPLETE
+[o] Updating remote native IP addr and routes
+[o] Updating remote native IP addr and routes COMPLETE
+[o] Bringing up Weave sneaker-LAN.....
+10.100.101.111
+10.100.101.111
+10.100.101.111
+[o] Weave sneaker-LAN ONLINE
+[o] Instance teleportation COMPLETE
+[o] New sneaker id: de3036ef6df035377b2996283af7f87bbbf0ce57547618058638553b43bdc336
+[o] New native IP ADDR: 172.17.0.4
+[o] Weave SLAN IP ADDR: 10.100.101.111/24
+[o] Cleaning up...
+638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+[o] DONE
+cnvm@cnvm-host-01:~/cnvm$
+```
+
+10. Your cnvm terminal window will now be responsive again, the session never died, and your cvnm is now live in AWS!
+
+-----
 
 ***Want to setup your own N-node test environment on and play with it?***
-**We have put together a set of scripts that will build it for you on most any hypervisor or cloud provider**
 
 **Things You will need:**
 
 - A Linux or Mac OSX workstation
 - Vagrant installed on your workstation (current version required: 1.7.4)
-- git installed on your workstation
 - Access to enough virtual resources (not necessarily on the local workstation) to run a minimum of (3) 'footlockers'
     - <b>What's a footlocker?</b>  It's a host that is capable of running cnvm's
   - Each footlocker will need a minimum of 1 CPU, 1 gb of memory and 30gb of disk space
