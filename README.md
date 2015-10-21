@@ -143,11 +143,11 @@ You need to create an access token from the administrative login.
 You need the following environment variables set:
 
 ```
-DO_OVERRIDE_KEY=<PATH TO SSH KEY YOU WISH TO USE>
-DO_SIZE=2GB
-DO_REGION=<DATACENTER YOU WANT TO USE - I USED NY3 FOR TESTING>
-DO_IMAGE=ubuntu-15-04-x64
-DO_TOKEN=<YOUR DIGITAL OCEAN API TOKEN>
+export DO_OVERRIDE_KEY=<PATH TO SSH KEY YOU WISH TO USE>
+export DO_SIZE=2GB
+export DO_REGION=<DATACENTER YOU WANT TO USE - I USED NY3 FOR TESTING>
+export DO_IMAGE=ubuntu-15-04-x64
+export DO_TOKEN=<YOUR DIGITAL OCEAN API TOKEN>
 ```
 
 ##Google Compute Engine
