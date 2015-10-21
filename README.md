@@ -112,7 +112,9 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 #Cloud Provider-Specific Setups
 
-Read the details below for the provider you want to use.  Set these environment variables BEFORE running footlocker-bootstrap.sh.
+Read the details below for the provider you want to use.  
+
+Set these environment variables <b>BEFORE</b> running footlocker-bootstrap.sh.
 
 ##AWS
 
