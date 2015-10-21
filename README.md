@@ -78,50 +78,50 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 4. This will kick off the build of (3) hosts.  A build host and two footlockers.  A footlocker is a host that is prepped to host cnvms.  This step will take approximately 10 minutes depending on your local workstation horsepower and network connectivity.  When completed you will be returned to the prompt, and you may now log into cnvm-host-01 to deploy your first cnvm:
 
-```
-user@workstation~/cnvm$: vagrant ssh cnvm-host-01
-```
+ ```
+ user@workstation~/cnvm$: vagrant ssh cnvm-host-01
+ ```
 
 5. You will be greeted with an Ubuntu banner, and you need to su to the 'cnvm' user to establish the network overlay and launch the initial cnvm.  Upon successful 'su', a script will fire automatically to do this.  When complete you will be notified that the initial cnvm is online, its ip address and password.  
 
-```
-Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)
+ ```
+ Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
-----------------------------------------------------------------
-  Ubuntu 15.04                                built 2015-10-04
-----------------------------------------------------------------
-vagrant@cnvm-host-01:~$ sudo su - cnvm
-[o] Starting weave on 172.17.8.101
-Unable to find image 'weaveworks/weaveexec:1.1.2' locally
-1.1.2: Pulling from weaveworks/weaveexec
-511136ea3c5a: Pulling fs layer
-c9fa955c112e: Pulling fs layer
-296b35397bd8: Pulling fs layer
-5c0137366a00: Pulling fs layer
->>TEXT CLIPPED FOR BREVITY<<<
-Status: Downloaded newer image for stlalpha/myphusion:stockticker
-[o] Attaching global hostname and IP sneaker01.gonkulator.io/10.100.101.111/24
-10.100.101.111
-[o] Setting cnvm hostname
-[o] Success
-[o] cnvm online @ 10.100.101.111/24
-Forwarding local port 22 to 10.100.101.111:2222
-Forwarding local port 80 to 10.100.101.111:8080
-Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password
-cnvm@cnvm-host-01:~/cnvm$
-```
+ ----------------------------------------------------------------
+   Ubuntu 15.04                                built 2015-10-04
+ ----------------------------------------------------------------
+ vagrant@cnvm-host-01:~$ sudo su - cnvm
+ [o] Starting weave on 172.17.8.101
+ Unable to find image 'weaveworks/weaveexec:1.1.2' locally
+ 1.1.2: Pulling from weaveworks/weaveexec
+ 511136ea3c5a: Pulling fs layer
+ c9fa955c112e: Pulling fs layer
+ 296b35397bd8: Pulling fs layer
+ 5c0137366a00: Pulling fs layer
+ >>TEXT CLIPPED FOR BREVITY<<<
+ Status: Downloaded newer image for stlalpha/myphusion:stockticker
+ [o] Attaching global hostname and IP sneaker01.gonkulator.io/10.100.101.111/24
+ 10.100.101.111
+ [o] Setting cnvm hostname
+ [o] Success
+ [o] cnvm online @ 10.100.101.111/24
+ Forwarding local port 22 to 10.100.101.111:2222
+ Forwarding local port 80 to 10.100.101.111:8080
+ Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password
+ cnvm@cnvm-host-01:~/cnvm$
+ ```
 6. You have successfully launched your first cnvm!  You can log into it by ssh'ing to 10.100.101.111 username: user password: password
-```
-cnvm@cnvm-host-01:~/cnvm$ ssh user@10.100.101.111
-The authenticity of host '10.100.101.111 (10.100.101.111)' can't be established.
-ECDSA key fingerprint is 4a:c8:c8:f8:19:29:3f:f4:80:de:e6:38:bc:e7:e5:e5.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '10.100.101.111' (ECDSA) to the list of known hosts.
-user@10.100.101.111's password:
-Last login: Sun Sep 13 17:13:06 2015 from 172.17.42.1
-user@sneaker01:~$
-```
+ ```
+ cnvm@cnvm-host-01:~/cnvm$ ssh user@10.100.101.111
+ The authenticity of host '10.100.101.111 (10.100.101.111)' can't be established.
+ ECDSA key fingerprint is 4a:c8:c8:f8:19:29:3f:f4:80:de:e6:38:bc:e7:e5:e5.
+ Are you sure you want to continue connecting (yes/no)? yes
+ Warning: Permanently added '10.100.101.111' (ECDSA) to the list of known hosts.
+ user@10.100.101.111's password:
+ Last login: Sun Sep 13 17:13:06 2015 from 172.17.42.1
+ user@sneaker01:~$
+ ```
 7.  Stay logged in, and open another terminal window, and use vagrant to connect to cnvm-host-01 again, and su to 'cnvm'
 
 ```
