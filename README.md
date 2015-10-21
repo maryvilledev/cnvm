@@ -38,7 +38,9 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 ###We have put together a set of scripts that will build it for you on most hypervisors and cloud providers
 
 [hybrid-cloud](#hybrid-cloud-method)
+
 [n-node-cloud](#n-node-method)
+
 -----
 
 #hybrid-cloud-method
