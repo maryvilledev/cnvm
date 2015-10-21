@@ -8,7 +8,7 @@ usage()
 echo ""
 echo "Usage: $0 provider instances"
 echo "e.g., $0 aws 3"
-echo "This would build a total of three nodes on AWS.  One control node and two footlocker hosts for cnvm's"
+echo "This would build a total of three nodes on AWS.  One build node and two footlocker hosts for cnvm's"
 echo ""
 echo "See https://github.com/gonkulator/cnvm for spceifics on configuration for each provider"
 echo ""
@@ -106,7 +106,7 @@ ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} -o LogLevel=FA
 		thehassle=$(for i in $(ls sshconfigs/ | grep -v cnvm-host-00 | sed s/-sshconfig//g) ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
 		footlockertargets=$(echo ${thehassle} | sed s/\ /,/g)
 	elif [ $1 = "hybrid-demo" ] ; then
-		#And if we are doing the hybrid-demo then we have to deal with the specialness of virtualbox and bridge the gap to AWS
+		#And if we are doing the hybrid-demo then we have to deal with the specialvagrness of virtualbox and bridge the gap to AWS
 		thehassle=$(for i in cnvm-host-01 ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
 		thehassle2=$(echo ${thehassle} | sed s/\ /,/g)
 		thehassle3=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00 | grep -v cnvm-host-01 ) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
