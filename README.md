@@ -262,7 +262,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
     
 5. Open a second ssh session to the cnvm footlocker node.  And teleport *(live-migrate)* it to one of the other nodes.  To do this simply:
 
-    *cnvm@cnvm-host-01~$* `./teleport.sh sneaker01.gonkulator.io cnvm@<targetip>:/home/cnvm/sneakers`
+    *cnvm@cnvm-host-01~$* `teleport sneaker01.gonkulator.io cnvm@<targetip>:/home/cnvm/sneakers`
     
     **NOTE:** The target IP address in the above example can be the weave ip address of the footlocker host in question.  The hosts are numbered starting at 10.100.101.1 (cnvm-host-01) and upwards for each additional footlocker node. In the above example - cnvm-host-02 would be 10.100.101.3
 
