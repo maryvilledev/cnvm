@@ -110,19 +110,21 @@
     #   command: /usr/bin/make DOCKER_EXPERIMENTAL=1 binary chdir={{ source_dir }}/docker creates={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker
     #   register: build_docker
 
+    - name: Stop Docker
+      sudo: yes
+      service: name=docker state=stopped
+
     - name: Get custom Docker binary
       sudo: yes
       get_url: dest=/usr/bin/docker force=yes url=https://bintray.com/artifact/download/colebrumley/CNVM_Docker/pre-release-1/docker
+      notify:
+        - Restart docker
 
     # - name: Link experimental docker binary to /usr/bin/docker
     #   sudo: yes
     #   file: dest=/usr/bin/docker src={{ source_dir }}/docker/bundles/1.9.0-dev/binary/docker force=yes state=link mode=0755
     #   notify:
     #     - Restart docker
-
-    - name: Start Docker
-      sudo: yes
-      service: name=docker state=started
 
     - name: Pull weave binary
       sudo: yes
