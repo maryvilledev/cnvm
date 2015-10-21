@@ -136,6 +136,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 7.  Leave that terminal window logged in, and open another terminal window. Use vagrant to connect to cnvm-host-01 again, and then `su` to `cnvm`
 
     *user@workstation:~$* `cd cnvm`
+    
     *user@workstation:~/cnvm$* `vagrant ssh cnvm-host-01`
  ```
  Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)       
@@ -261,9 +262,9 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
     
 5. Open a second ssh session to the cnvm footlocker node.  And teleport *(live-migrate)* it to one of the other nodes.  To do this simply:
 
-    *cnvm@cnvm-host-01~$* `./teleport.sh sneaker01.gonkulator.io cnvm@<targetipaddress>:/home/cnvm/sneakers`
+    *cnvm@cnvm-host-01~$* `./teleport.sh sneaker01.gonkulator.io cnvm@<targetip>:/home/cnvm/sneakers`
     
-    **NOTE:** The target IP address in the above example can be the weave ip address of the footlocker host in question.  The hosts are numbered starting at 10.100.101.1 (cnvm-host-00) and upwards for each additional footlocker node. In the above example - cnvm-host-02 would be 10.100.101.3
+    **NOTE:** The target IP address in the above example can be the weave ip address of the footlocker host in question.  The hosts are numbered starting at 10.100.101.1 (cnvm-host-01) and upwards for each additional footlocker node. In the above example - cnvm-host-02 would be 10.100.101.3
 
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
   - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive. As soon as the migration has completed, it will resume since it has been migrated with all of its state to the target node!
