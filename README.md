@@ -35,15 +35,15 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 #Scripts
 
-###We have put together a set of scripts that will build it for you on most hypervisors and cloud providers**
+###We have put together a set of scripts that will build it for you on most hypervisors and cloud providers
 
-[hybrid-cloud](##hybrid-cloud-method)
-[n-node-cloud](##n-node-method)
+[hybrid-cloud](#hybrid-cloud-method)
+[n-node-cloud](#n-node-method)
 -----
 
-##hybrid-cloud-method
+#hybrid-cloud-method
 
-***If you want to try CNVM out using our automated hybrid-cloud creator (using Virtualbox and AWS):***
+***If you want to try CNVM out using the automated hybrid-cloud creator (using Virtualbox and AWS):***
 
 **hybrid-cloud-method minimum requirements:**
 
@@ -201,7 +201,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 -----
 
-##n-node-method
+#n-node-method
 
 ***Want to setup your own N-node test environment on and play with it?***
 
