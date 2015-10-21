@@ -40,7 +40,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 **Things You will need:**
 
 - A Linux or Mac OSX workstation
-- Access to enough virtual resources (not necessarily on the local workstation) to run a minimum of (3) machines or 'footlockers'
+- Access to enough virtual resources (not necessarily on the local workstation) to run a minimum of (3) 'footlockers'
     - <b>What's a footlocker?</b>  It's a host that is capable of running cnvm's
   - Each footlocker will need a minimum of 1 CPU, 1 gb of memory and 30gb of disk space
   - The scripts currently build footlockers on the following hypervisors and cloud providers:
