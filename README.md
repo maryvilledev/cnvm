@@ -39,7 +39,8 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 **Things You will need:**
 
-- Access to enough virtual resources to run a minimum of (3) machines
+- Access to enough virtual resources to run a minimum of (3) machines or 'footlockers'
+    - What's a footlocker?  It's a host that is capable of running cnvm's
   - Each machine will need a minimum of 1 CPU, 1 gb of memory and 30gb of disk space
   - The scripts currently support the following hypervisors and cloud providers:
     - VMWare Fusion
@@ -75,7 +76,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
         user@workstation~$ cd cnvm
         user@workstation~$ ./footlocker-bootstrap.sh aws 3
         ```
-        <b>NOTE:</b> the script will accept the following as valid arguments: aws, azure, digitalocean, google, virtualbox, vmware_fusion, vmware_workstation
+        <b>NOTE:</b> the script will accept the following as valid arguments: aws, azure, digitalocean, google, virtualbox, vmware_fusion, vmware_workstation - execute footlocker-bootstrap.sh for more usage information.
 
 3. Once the deployment is complete, use vagrant to log into cnvm-host-001 (or any footlocker node other than cnvm-host-00) and then su to the 'cnvm' user. On successful su, the first cnvm will automatically launch.  
 
