@@ -119,12 +119,10 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 6. You have successfully launched your first cnvm! 
    Log into it by *ssh'ing* to: `10.100.101.111`
 
-   *username:* `user`
-
-   *password:* `password`
-
- 
    *cnvm@cnvm-host-01:~/cnvm$* `ssh user@10.100.101.111`
+   
+   *password:* `password`
+   
  ```
  The authenticity of host '10.100.101.111 (10.100.101.111)' can't be established.
  ECDSA key fingerprint is 4a:c8:c8:f8:19:29:3f:f4:80:de:e6:38:bc:e7:e5:e5.
@@ -244,6 +242,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
     -  The full command should look something like this:
 
         *user@workstation~$* `cd cnvm`
+        
         *user@workstation~$* `./footlocker-bootstrap.sh aws 3`
         
         **NOTE:** the script will accept the following as valid arguments: [aws](#aws), [azure](#azure), [digitalocean](#digitalocean), [google](#google), virtualbox, vmware_fusion, vmware_workstation - execute footlocker-bootstrap.sh for more usage information.
@@ -251,11 +250,13 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 3. Once the deployment is complete, use vagrant to log into cnvm-host-001 (or any footlocker node other than cnvm-host-00) and then `su` to the `cnvm` user. On successful `su`, the first cnvm will automatically launch.  
 
     *user@workstation~$* `vagrant ssh cnvm-host-01`
+    
     *root@cnvm-host-01#* `sudo su - cnvm`
 
 4. When the script completes, you can connect to the running cnvm from the footlocker at the following IP: `10.100.101.111`.
 
     *cnvm@cnvm-host-01~$* `ssh user@10.100.101.111`
+    
     *password:* `password`
     
 5. Open a second ssh session to the cnvm footlocker node.  And teleport *(live-migrate)* it to one of the other nodes.  To do this simply:
