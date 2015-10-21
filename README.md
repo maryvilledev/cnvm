@@ -97,7 +97,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
     cnvm@cnvm-host-01~$ ./teleport.sh sneaker01.gonkulator.io cnvm@<targetipaddress>:/home/cnvm/sneakers
     ```
     <b>NOTE:</b> The target IP address in the above example can be the weave ip address of the footlocker host in question.  The hosts are numbered starting at 10.100.101.1 (cnvm-host-00) and upwards for each additional footlocker node. In the above example - cnvm-host-02 would be 10.100.101.3
-    
+
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
   - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive. As soon as the migration has completed, it will resume since it has been migrated with all of its state to the target node!
 
