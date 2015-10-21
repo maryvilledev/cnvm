@@ -82,7 +82,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
  
    *user@workstation:~/cnvm$:* `./footlocker-bootstrap.sh hybrid-demo`
 
-4. This will kick off the build of 3 hosts.  A build host, and two footlockers.  A footlocker is a host that is prepped to host cnvms.  This step will take approximately 10 minutes depending on your local workstation horsepower and network connectivity.  When completed you will be returned to the prompt, and you may now log into cnvm-host-01 to deploy your first cnvm:
+4. This will kick off the build of 3 hosts.  A build host (in virtualbox, in your workstation), and two footlockers (one in virtualbox and one up at AWS).  A footlocker is a host that is prepped to host cnvms.  This step will take approximately 10 minutes depending on your local workstation horsepower and network connectivity.  When completed you will be returned to the prompt, and you may then log into cnvm-host-01 to deploy your first cnvm:
 
    *user@workstation~/cnvm$:* `vagrant ssh cnvm-host-01`
 
