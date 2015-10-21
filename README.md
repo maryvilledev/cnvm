@@ -140,50 +140,50 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 8. From this new session, you are going to live migrate (teleport) your cnvm from your Virtualbox instance, into AWS - by executing: 
 
-```
-cnvm@cnvm-host-01:~$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
-```
+ ```
+ cnvm@cnvm-host-01:~$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
+ ```
 
 9. As the command executes, you will notice that in your first terminal window (the one logged into the cnvm) the session becomes unresponsive, as time has frozen and it is being transported across the network to AWS.  Fear not - it will come alive again once it has reached the far side.  You will see the following in the teleport terminal session:
 
-```
-cnvm@cnvm-host-01:~/cnvm$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
-[o] Checking remote site
-[o] Checking remote landing-zone...
-Warning: Permanently added '10.100.101.2' (ECDSA) to the list of known hosts.
-[o] Remote landing zone OK
-[o] Sanitizing site
-[o] Sanitizing cnvm@10.100.101.2
-[o] Snapshotting sneaker: 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
-[o] Setting up local landing-zone...
-[o] Checkpointing sneaker 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
-[o] Checkpoint success...
-[o] Registering sneaker image...
-[o] Streaming sneaker image...
-[o] Streaming sneaker image COMPLETE
-[o] Teleporting sneaker: 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
-[o] Transferring machine state information....
-[o] Machine state information transfer COMPLETE
-[o] Creating remote surrogate...
-[o] Remote surrogate creation de3036ef6df035377b2996283af7f87bbbf0ce57547618058638553b43bdc336 COMPLETE
-[o] Restoring instance run state...
-[o] Instance run state restoration COMPLETE
-[o] Updating remote native IP addr and routes
-[o] Updating remote native IP addr and routes COMPLETE
-[o] Bringing up Weave sneaker-LAN.....
-10.100.101.111
-10.100.101.111
-10.100.101.111
-[o] Weave sneaker-LAN ONLINE
-[o] Instance teleportation COMPLETE
-[o] New sneaker id: de3036ef6df035377b2996283af7f87bbbf0ce57547618058638553b43bdc336
-[o] New native IP ADDR: 172.17.0.4
-[o] Weave SLAN IP ADDR: 10.100.101.111/24
-[o] Cleaning up...
-638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
-[o] DONE
-cnvm@cnvm-host-01:~/cnvm$
-```
+ ```
+ cnvm@cnvm-host-01:~/cnvm$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
+ [o] Checking remote site
+ [o] Checking remote landing-zone...
+ Warning: Permanently added '10.100.101.2' (ECDSA) to the list of known hosts.
+ [o] Remote landing zone OK
+ [o] Sanitizing site
+ [o] Sanitizing cnvm@10.100.101.2
+ [o] Snapshotting sneaker: 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+ [o] Setting up local landing-zone...
+ [o] Checkpointing sneaker 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+ [o] Checkpoint success...
+ [o] Registering sneaker image...
+ [o] Streaming sneaker image...
+ [o] Streaming sneaker image COMPLETE
+ [o] Teleporting sneaker: 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+ [o] Transferring machine state information....
+ [o] Machine state information transfer COMPLETE
+ [o] Creating remote surrogate...
+ [o] Remote surrogate creation de3036ef6df035377b2996283af7f87bbbf0ce57547618058638553b43bdc336 COMPLETE
+ [o] Restoring instance run state...
+ [o] Instance run state restoration COMPLETE
+ [o] Updating remote native IP addr and routes
+ [o] Updating remote native IP addr and routes COMPLETE
+ [o] Bringing up Weave sneaker-LAN.....
+ 10.100.101.111
+ 10.100.101.111
+ 10.100.101.111
+ [o] Weave sneaker-LAN ONLINE
+ [o] Instance teleportation COMPLETE
+ [o] New sneaker id: de3036ef6df035377b2996283af7f87bbbf0ce57547618058638553b43bdc336
+ [o] New native IP ADDR: 172.17.0.4
+ [o] Weave SLAN IP ADDR: 10.100.101.111/24
+ [o] Cleaning up...
+ 638f6c319bc06148afc5f8ca01e0890522b1e6643aefe656ccedc1f9d74de167
+ [o] DONE
+ cnvm@cnvm-host-01:~/cnvm$
+ ```
 
 10. Your cnvm terminal window will now be responsive again, the session never died, and your cvnm is now live in AWS!
 
