@@ -63,7 +63,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 #### Let's Do It!
 
 - Decide which hypervisor and/or cloud providers you are going to use to build your footlockers
-- If you have chosen cloud providers, make sure that you have your account credentials and the other relevant environment variables set (see below for cloud-provider specific how-to details) 
+- If you have chosen cloud providers, make sure that you have your account credentials and the other relevant environment variables set (see below for cloud-provider specific details <b>BEFORE</b> continuing.) 
 - Each of the target cnvm footlockers must be able to reach each other over 22/tcp, 6783/tcp and 6783/udp. 
  - If you are running on a public cloud provider, make sure you have set up access to allow these ports and protocols
 
