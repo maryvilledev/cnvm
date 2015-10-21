@@ -94,7 +94,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 5. Open a second ssh session to the cnvm footlocker node.  And teleport (live-migrate) it to one of the other nodes.  To do this simply:
 
     ```shell
-    cnvm@cnvm-host-01~$ ./teleport.sh sneaker01.gonkulator.io cnvm@<targethost>:/home/cnvm/sneakers
+    cnvm@cnvm-host-01~$ ./teleport.sh sneaker01.gonkulator.io cnvm@<targetipaddress>:/home/cnvm/sneakers
     ```
   - This will initiate a live-migration of the cnvm from the master node, to the target node you specified on the command line.
   - When this executes - your ssh session on the cnvm (10.100.101.111) will become unresponsive. As soon as the migration has completed, it will resume since it has been migrated with all of its state to the target node!
