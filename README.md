@@ -111,6 +111,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
  Initial cnvm online @ 10.100.101.111 -- Connect with ssh: ssh user@10.100.101.111 password: password
  cnvm@cnvm-host-01:~/cnvm$
  ```
+
 6. You have successfully launched your first cnvm!  You can log into it by ssh'ing to 10.100.101.111 username: user password: password
  ```
  cnvm@cnvm-host-01:~/cnvm$ ssh user@10.100.101.111
@@ -124,19 +125,20 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
  ```
 7.  Stay logged in, and open another terminal window, and use vagrant to connect to cnvm-host-01 again, and su to 'cnvm'
 
-```
-user@workstation:~$ cd cnvm
-user@workstation:~/cnvm$ vagrant ssh cnvm-host-01
-Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)
+ ```
+ user@workstation:~$ cd cnvm
+ user@workstation:~/cnvm$ vagrant ssh cnvm-host-01
+ Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-15-generic x86_64)       
 
- * Documentation:  https://help.ubuntu.com/
-----------------------------------------------------------------
-  Ubuntu 15.04                                built 2015-10-04
-----------------------------------------------------------------
-vagrant@cnvm-host-01:~$ sudo su - cnvm
-cnvm@cnvm-host-01:~$
-```
-8. From this new session, you are going to live migrate (teleport) your cnvm from your Virtualbox instance, into AWS - by executing:
+  * Documentation:  https://help.ubuntu.com/ 
+ ----------------------------------------------------------------
+   Ubuntu 15.04                                built 2015-10-04
+ ----------------------------------------------------------------
+ vagrant@cnvm-host-01:~$ sudo su - cnvm
+ cnvm@cnvm-host-01:~$
+ ```
+
+8. From this new session, you are going to live migrate (teleport) your cnvm from your Virtualbox instance, into AWS - by executing: 
 
 ```
 cnvm@cnvm-host-01:~$ teleport sneaker01.gonkulator.io cnvm@10.100.101.2:/home/cnvm/sneakers
