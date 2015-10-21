@@ -246,7 +246,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
         
         *user@workstation~$* `./footlocker-bootstrap.sh aws 3`
         
-        **NOTE:** the script will accept the following as valid arguments: [aws](#aws), [azure](#azure), [digitalocean](#digitalocean), [google](#google), virtualbox, vmware_fusion, vmware_workstation - execute footlocker-bootstrap.sh for more usage information.
+        **NOTE:** the script will accept the following as valid arguments: [aws](#aws), [azure](#azure), [digital_ocean](#digitalocean), [google](#google), virtualbox, vmware_fusion, vmware_workstation - execute footlocker-bootstrap.sh for more usage information.
 
 3. Once the deployment is complete, use vagrant to log into cnvm-host-001 (or any footlocker node other than cnvm-host-00) and then `su` to the `cnvm` user. On successful `su`, the first cnvm will automatically launch.  
 
