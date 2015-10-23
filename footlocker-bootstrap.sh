@@ -49,8 +49,7 @@ if [ $1 = "hybrid-demo" ] ; then
 	vagrant up cnvm-host-01 --provider=virtualbox
 	vagrant up cnvm-host-02 --provider=aws
 else
-	/bin/true
-	#vagrant up --provider=$1
+	vagrant up --provider=$1
 fi
 
 
