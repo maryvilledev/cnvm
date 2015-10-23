@@ -49,7 +49,8 @@ if [ $1 = "hybrid-demo" ] ; then
 	vagrant up cnvm-host-01 --provider=virtualbox
 	vagrant up cnvm-host-02 --provider=aws
 else
-	vagrant up --provider=$1
+	/bin/true
+	#vagrant up --provider=$1
 fi
 
 
@@ -121,7 +122,7 @@ echo "Building...."
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm:vagrant-multi"
 
 
-if [ $3 != "debug" ] ; then
+if [ "$3" != "debug" ] ; then
 echo "Cleaning up..."
 rm sshconfigs/*
 rm thekeys/id_rsa*
