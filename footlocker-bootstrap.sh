@@ -29,9 +29,13 @@ exit 1
 
 
 
-if  [ $# -lt 2 ] ; then
-	usage
-	exit 1
+if [ $# -lt 2 ]; then
+	if [ "$1" == "hybrid-demo" ]; then
+		:
+	else
+		usage
+		exit 1
+	fi	
 fi
 
 export NUM_FOOTLOCKERS=$2
