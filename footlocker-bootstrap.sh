@@ -18,7 +18,7 @@ echo ""
 echo "Valid provider values are:"
 echo "aws - Amazon Web Services"
 echo "azure - Microsoft Azure"
-echo "digital_locean - Digital Ocean"
+echo "digital_ocean - Digital Ocean"
 echo "google - Google Compute Engine"
 echo "virtualbox - Oracle VirtualBox"
 echo "vmware_fusion - VMWare Fusion [requires addl vagrant license]"
@@ -57,9 +57,27 @@ scp -P ${targetport} -i ${targetkey} -o LogLevel=FATAL -o StrictHostKeyChecking=
 
 get_host_type()
 {
-vagrant status $1 | grep $1 | awk '{print $3}' | tr -d '()'
+NODETYPE=$(vagrant status $1 | grep $1 | awk '{print $3}' | tr -d '()')
 }
 
+get_host_ssh_info()
+{
+	hostip=$(cat sshconfigs/$1-sshconfig | grep HostName | awk '{print $2}')
+	hostuser=$(cat sshconfigs/$1-sshconfig | grep User\  | awk '{print $2}')
+	hostsshkey=$(cat sshconfigs/$1-sshconfig | grep IdentityFile | awk '{print $2}')
+	hostport=$(cat sshconfigs/$1-sshconfig | grep Port\  | awk '{print $2}')
+}
+
+
+get_host_ip()
+{
+	cat sshconfigs/$1-sshconfig | grep HostName | awk '{print $2}'
+}
+
+get_host_ip_virtualbox()
+{
+	VboxManage guestproperty get $(cat .vagrant/machines/$1/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g 
+}
 
 #main
 
@@ -95,8 +113,14 @@ fi
 #vagrant reload
 
 
-mkdir sshconfigs
-vagrant ssh-config cnvm-host-00 > sshconfigs/cnvm-host-00-sshconfig
+#mkdir the sshconfigs dir and dump all the ssh-config info into it
+mkdir -p sshconfigs
+for i in $(cat therunninghosts) ; do
+	vagrant ssh-config ${i} > sshconfigs/${i}-sshconfig
+done
+
+#vagrant ssh-config cnvm-host-00 > sshconfigs/cnvm-host-00-sshconfig
+
 masterip=$(cat sshconfigs/cnvm-host-00-sshconfig | grep HostName | awk '{print $2}')
 masteruser=$(cat sshconfigs/cnvm-host-00-sshconfig | grep User\  | awk '{print $2}')
 mastersshkey=$(cat sshconfigs/cnvm-host-00-sshconfig | grep IdentityFile | awk '{print $2}')
@@ -116,7 +140,8 @@ targetnodes=($(cat therunninghosts | grep -v cnvm-host-00))
 #create an array of nodes to be built/manipulated and copy the build-nodes root key to each of them and put it in ~root/.ssh/authorized_keys
 echo "Target nodes are: ${targetnodes[@]}"
 for i in ${targetnodes[@]}; do
-	vagrant ssh-config $i > sshconfigs/$i-sshconfig
+	#the below vagrant ssh-config dump shouldnt be necessary 
+	#vagrant ssh-config $i > sshconfigs/$i-sshconfig
 	targetip=$(cat sshconfigs/$i-sshconfig | grep HostName | awk '{print $2}')
 	targetuser=$(cat sshconfigs/$i-sshconfig | grep User\  | awk '{print $2}')
 	targetkey=$(cat sshconfigs/$i-sshconfig | grep IdentityFile | awk '{print $2}')
@@ -148,19 +173,9 @@ ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 #build the list of footlocker targets to be built based off of parsing the ssh-configs 
 	echo "Kicking off Cloud Native VM footlocker builds..."
 	#virtualbox is special - so get the private network ip's of the arbitrary nodes using vboxmanage and plug them in here otherwise carry on...
-	BUILDNODETYPE=$(get_host_type cnvm-host-00)
-	if [ $BUILDNODETYPE = "virtualbox" ] ; then
-		thehassle=$(for i in $(ls sshconfigs/ | grep -v cnvm-host-00 | sed s/-sshconfig//g) ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
-		footlockertargets=$(echo ${thehassle} | sed s/\ /,/g)
-	elif [ $1 = "hybrid-demo" ] ; then
-		#And if we are doing the hybrid-demo - get the vbox host node and move on
-		thehassle=$(for i in cnvm-host-01 ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
-		thehassle2=$(echo ${thehassle} | sed s/\ /,/g)
-		thehassle3=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00 | grep -v cnvm-host-01 ) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
-		footlockertargets=${thehassle2},${thehassle3}
-	else
-	footlockertargets=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
-	fi
+	#BUILDNODETYPE=$(get_host_type cnvm-host-00)
+	targetnodeips=($(for i in ${targetnodes[@]}; do get_host_type ${i} ; if [ $NODETYPE != virtualbox ]  ; then get_host_ip ${i} else get_host_ip_virtualbox ${i} ; fi ; done))
+	footlockertargets=$(echo ${targetnodeips[@]} | sed s/\ /,/g)
 
 #ssh into the build node and pull the ansible container that will bootstrap all the footlocker hosts
 echo "Pulling build container...."
