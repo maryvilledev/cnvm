@@ -55,6 +55,11 @@ scp_node_command()
 scp -P ${targetport} -i ${targetkey} -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes $*
 }
 
+get_host_type()
+{
+vagrant status $1 | grep $1 | awk '{print $3}' | tr -d '()'
+}
+
 
 #main
 
@@ -108,6 +113,7 @@ echo "Retrieved cnvm-host-00 ssh-keys"
 targetnodes=($(cat therunninghosts | grep -v cnvm-host-00))
 
 
+#create an array of nodes to be built/manipulated and copy the build-nodes root key to each of them and put it in ~root/.ssh/authorized_keys
 echo "Target nodes are: ${targetnodes[@]}"
 for i in ${targetnodes[@]}; do
 	vagrant ssh-config $i > sshconfigs/$i-sshconfig
@@ -122,6 +128,7 @@ for i in ${targetnodes[@]}; do
 	ssh_node_command 'sudo ~/nodekeys/keyupdate.sh'
 done
 
+#build a list of targets to go ssh-keyscan based on dumping vagrant ssh-config for each node into the sshconfigs directory
 keyscantargets=$(cd ./sshconfigs && for i in $(ls) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs)
 
 for i in ${targetnodes[@]}; do
@@ -132,17 +139,21 @@ for i in ${targetnodes[@]}; do
 	ssh_node_command "sudo ~/nodekeys/keyscanner.sh ${keyscantargets}"
 done
 
+#copy up the keyupdate and keyscanner scripts to the master node and keyscan each of the build targets
 echo "Keyscanning master to targets..."
 scp_master_command thekeys/*.sh ${masteruser}@${masterip}:.
 ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 
+
+#build the list of footlocker targets to be built based off of parsing the ssh-configs 
 	echo "Kicking off Cloud Native VM footlocker builds..."
-	#virtualbox is special - so get the private network ip's of the arbitrary nodes using vboxmanage - ick! - and plug them in here otherwise carry on...
-	if [ $1 = "virtualbox" ] ; then
+	#virtualbox is special - so get the private network ip's of the arbitrary nodes using vboxmanage and plug them in here otherwise carry on...
+	BUILDNODETYPE=$(get_host_type cnvm-host-00)
+	if [ $BUILDNODETYPE = "virtualbox" ] ; then
 		thehassle=$(for i in $(ls sshconfigs/ | grep -v cnvm-host-00 | sed s/-sshconfig//g) ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
 		footlockertargets=$(echo ${thehassle} | sed s/\ /,/g)
 	elif [ $1 = "hybrid-demo" ] ; then
-		#And if we are doing the hybrid-demo then we have to deal with the specialness of virtualbox and bridge the gap to AWS
+		#And if we are doing the hybrid-demo - get the vbox host node and move on
 		thehassle=$(for i in cnvm-host-01 ; do VboxManage guestproperty get $(cat .vagrant/machines/${i}/virtualbox/id) /VirtualBox/GuestInfo/Net/1/V4/IP | sed s/Value:\ //g | xargs ; done) 
 		thehassle2=$(echo ${thehassle} | sed s/\ /,/g)
 		thehassle3=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00 | grep -v cnvm-host-01 ) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
@@ -151,11 +162,14 @@ ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 	footlockertargets=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-host-00) ; do cat $i | grep HostName\  | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
 	fi
 
+#ssh into the build node and pull the ansible container that will bootstrap all the footlocker hosts
 echo "Pulling build container...."
 ssh_master_command "docker pull gonkulatorlabs/cnvm:vagrant-multi"
 echo "Building...."
+#ssh into the build node and execute the ansible container with the NODES arg set to the footlocker targets list yoiu built above
 ssh_master_command "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm:vagrant-multi"
 
+#cleanup - unless you set debug then leave the logs laying around so you can figure out whats going on
 if [ "$3" != "debug" ] ; then
 echo "Cleaning up..."
 rm sshconfigs/*
