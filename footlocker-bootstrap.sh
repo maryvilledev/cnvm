@@ -140,8 +140,6 @@ targetnodes=($(cat therunninghosts | grep -v cnvm-host-00))
 #create an array of nodes to be built/manipulated and copy the build-nodes root key to each of them and put it in ~root/.ssh/authorized_keys
 echo "Target nodes are: ${targetnodes[@]}"
 for i in ${targetnodes[@]}; do
-	#the below vagrant ssh-config dump shouldnt be necessary 
-	#vagrant ssh-config $i > sshconfigs/$i-sshconfig
 	targetip=$(cat sshconfigs/$i-sshconfig | grep HostName | awk '{print $2}')
 	targetuser=$(cat sshconfigs/$i-sshconfig | grep User\  | awk '{print $2}')
 	targetkey=$(cat sshconfigs/$i-sshconfig | grep IdentityFile | awk '{print $2}')
@@ -174,7 +172,7 @@ ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 	echo "Kicking off Cloud Native VM footlocker builds..."
 	#virtualbox is special - so get the private network ip's of the arbitrary nodes using vboxmanage and plug them in here otherwise carry on...
 	#BUILDNODETYPE=$(get_host_type cnvm-host-00)
-	targetnodeips=($(for i in ${targetnodes[@]}; do get_host_type ${i} ; if [ $NODETYPE != virtualbox ]  ; then get_host_ip ${i} else get_host_ip_virtualbox ${i} ; fi ; done))
+	targetnodeips=($(for i in ${targetnodes[@]}; do get_host_type ${i} ; if [ "$NODETYPE" == virtualbox ] ; then get_host_ip_virtualbox ${i} ; else get_host_ip ${i} ; fi ; done))
 	footlockertargets=$(echo ${targetnodeips[@]} | sed s/\ /,/g)
 
 #ssh into the build node and pull the ansible container that will bootstrap all the footlocker hosts
