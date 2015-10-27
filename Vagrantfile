@@ -108,9 +108,9 @@ config.vm.boot_timeout = 1000
 	
  ["google"].each do |google|
 	config.vm.provider google do |z, override|
-        override.vm.box = "gce"
+  override.vm.box = "gce"
 	override.vm.box_url = "https://github.com/mitchellh/vagrant-google/raw/master/google.box"
-	override.vm.box_version = ""
+	#override.vm.box_version = ""
 	end
      end
      
@@ -119,7 +119,7 @@ config.vm.boot_timeout = 1000
        config.vm.provider digital_ocean do |z, override|
          override.vm.box = "digital_ocean"
 	       override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-	       override.vm.box_version = ""
+	       #override.vm.box_version = ""
 	    end
      end
 
@@ -128,7 +128,7 @@ config.vm.boot_timeout = 1000
 	     config.vm.provider azure do |q, override|
        override.vm.box = "azure"
 	     override.vm.box_url = "https://github.com/msopentech/vagrant-azure/raw/master/dummy.box"
-	     override.vm.box_version = ""
+	     #override.vm.box_version = ""
 	     end
      end
 
@@ -136,7 +136,7 @@ config.vm.boot_timeout = 1000
      config.vm.provider aws do |x, override|
      override.vm.box = "dummy"
      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-     override.vm.box_version = ""
+     #override.vm.box_version = ""
     end
   end
 
