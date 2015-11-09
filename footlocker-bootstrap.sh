@@ -1,6 +1,7 @@
 #!/bin/sh
 #mass footlocker bootstrap - arbitrary hosts and providers
 #jim@gonkulator.io 10/20/2015
+#
 
 
 
