@@ -163,6 +163,7 @@ config.vm.boot_timeout = 1000
              "chown $SUDO_USER id_rsa*",
              "sudo apt-get update -y",
              "sudo apt-get install docker.io -y",
+             "sudo systemctl enable docker",
              "sudo usermod -aG docker $SUDO_USER",
              "sudo service docker start",
              "sudo apt-get install linux-image-extra-$(uname -r) -y"
