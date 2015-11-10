@@ -1,7 +1,6 @@
 #!/bin/sh
 #mass footlocker bootstrap - arbitrary hosts and providers
 #jim@gonkulator.io 10/20/2015
-#
 
 
 
@@ -110,9 +109,8 @@ else
 fi
 
 
-#azure takes so long that vagrant times out - fix this
-#vagrant reload
-
+#azure takes so long that vagrant times out - fix this - bounce the boxen
+vagrant reload
 
 #mkdir the sshconfigs dir and dump all the ssh-config info into it
 mkdir -p sshconfigs
