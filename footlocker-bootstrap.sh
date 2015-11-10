@@ -110,7 +110,7 @@ fi
 
 
 #azure takes so long that vagrant times out - fix this - bounce the boxen
-vagrant reload
+#vagrant reload
 
 #mkdir the sshconfigs dir and dump all the ssh-config info into it
 mkdir -p sshconfigs
@@ -166,6 +166,13 @@ echo "Keyscanning master to targets..."
 scp_master_command thekeys/*.sh ${masteruser}@${masterip}:.
 ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 
+#persist docker
+#for i in ${targetnodes[@]}; do
+#	ssh_node_command "sudo apt-get install -y docker.io"
+#	ssh_node_command "sudo systemctl enable docker"
+#done
+#bounce boxen
+#vagrant reload
 
 #build the list of footlocker targets to be built based off of parsing the ssh-configs 
 	echo "Kicking off Cloud Native VM footlocker builds..."
@@ -180,6 +187,9 @@ ssh_master_command "docker pull gonkulatorlabs/cnvm:vagrant-multi"
 echo "Building...."
 #ssh into the build node and execute the ansible container with the NODES arg set to the footlocker targets list yoiu built above
 ssh_master_command "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm:vagrant-multi"
+
+#reload the machines so the kernel updates are running
+vagrant reload
 
 #cleanup - unless you set debug then leave the logs laying around so you can figure out whats going on
 if [ "$3" != "debug" ] ; then
