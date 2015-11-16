@@ -57,7 +57,7 @@ scp -P ${targetport} -i ${targetkey} -o LogLevel=FATAL -o StrictHostKeyChecking=
 
 get_host_type()
 {
-NODETYPE=$(vagrant status $1 | grep $1 | awk '{print $3}' | tr -d '()')
+export NODETYPE=$(vagrant status $1 | grep $1 | awk '{print $3}' | tr -d '()')
 }
 
 get_host_ssh_info()
@@ -99,18 +99,19 @@ touch therunninghosts
 >therunninghosts
 
 
-#if we are running the split hybrid demo - create two local virtualbox instances and an AWS instance
+#if we are running the split hybrid demo - create two local virtualbox instances and an AWS instance - also do contextual reloads
 if [ $1 = "hybrid-demo" ] ; then
 	vagrant up cnvm-host-00 --provider=$2
+	export providertype=$2 && vagrant reload cnvm-host-00
 	vagrant up cnvm-host-01 --provider=$2
+	export providertype=$2 && vagrant reload cnvm-host-01
 	vagrant up cnvm-host-02 --provider=$3
+	export providertype=$3 && vagrant reload cnvm-host-02
 else
-	vagrant up --provider=$1
+	vagrant up --provider=$1 && export providertype=$1
+	vagrant reload
 fi
 
-
-#azure takes so long that vagrant times out - fix this - bounce the boxen
-#vagrant reload
 
 #mkdir the sshconfigs dir and dump all the ssh-config info into it
 mkdir -p sshconfigs
@@ -166,13 +167,6 @@ echo "Keyscanning master to targets..."
 scp_master_command thekeys/*.sh ${masteruser}@${masterip}:.
 ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 
-#persist docker
-#for i in ${targetnodes[@]}; do
-#	ssh_node_command "sudo apt-get install -y docker.io"
-#	ssh_node_command "sudo systemctl enable docker"
-#done
-#bounce boxen
-#vagrant reload
 
 #build the list of footlocker targets to be built based off of parsing the ssh-configs 
 	echo "Kicking off Cloud Native VM footlocker builds..."
@@ -187,9 +181,6 @@ ssh_master_command "docker pull gonkulatorlabs/cnvm:vagrant-multi"
 echo "Building...."
 #ssh into the build node and execute the ansible container with the NODES arg set to the footlocker targets list yoiu built above
 ssh_master_command "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm:vagrant-multi"
-
-#reload the machines so the kernel updates are running
-vagrant reload
 
 #cleanup - unless you set debug then leave the logs laying around so you can figure out whats going on
 if [ "$3" != "debug" ] ; then
