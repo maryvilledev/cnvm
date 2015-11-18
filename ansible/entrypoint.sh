@@ -28,4 +28,4 @@ for node in $(echo ${NODES} | tr ',' '\n'); do
 done
 
 cd /etc/ansible
-ansible-playbook setup.yml
+ansible-playbook -vvvv setup.yml
