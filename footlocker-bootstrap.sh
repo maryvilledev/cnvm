@@ -99,17 +99,17 @@ touch therunninghosts
 >therunninghosts
 
 
-#if we are running the split hybrid demo - create two local virtualbox instances and an AWS instance - also do contextual reloads
+#if we are running the split hybrid demo - create two local virtualbox instances and a third instance of provider type $3 - also do contextual reloads
 if [ $1 = "hybrid-demo" ] ; then
 	vagrant up cnvm-host-00 --provider=$2
-	export providertype=$2 && vagrant reload cnvm-host-00
+#	export providertype=$2 && vagrant reload cnvm-host-00
 	vagrant up cnvm-host-01 --provider=$2
-	export providertype=$2 && vagrant reload cnvm-host-01
+#	export providertype=$2 && vagrant reload cnvm-host-01
 	vagrant up cnvm-host-02 --provider=$3
-	export providertype=$3 && vagrant reload cnvm-host-02
+#	export providertype=$3 && vagrant reload cnvm-host-02
 else
 	vagrant up --provider=$1 && export providertype=$1
-	vagrant reload
+#	vagrant reload
 fi
 
 
@@ -177,10 +177,10 @@ ssh_master_command "sudo ~/keyscanner.sh ${keyscantargets}"
 
 #ssh into the build node and pull the ansible container that will bootstrap all the footlocker hosts
 echo "Pulling build container...."
-ssh_master_command "docker pull gonkulatorlabs/cnvm:vagrant-multi"
+ssh_master_command "docker pull stlalpha/theansible"
 echo "Building...."
 #ssh into the build node and execute the ansible container with the NODES arg set to the footlocker targets list yoiu built above
-ssh_master_command "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm:vagrant-multi"
+ssh_master_command "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} stlalpha/theansible"
 
 #cleanup - unless you set debug then leave the logs laying around so you can figure out whats going on
 if [ "$3" != "debug" ] ; then
