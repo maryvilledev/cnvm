@@ -46,6 +46,27 @@
       sudo: yes
       apt: update_cache=yes upgrade=dist
 
+
+    - name: Rebooting
+      command: /sbin/shutdown -r +1
+      async: 0
+      poll: 0
+      ignore_errors: true
+      sudo: yes
+
+    - pause: seconds=120
+      
+    - name: wait for the server to finish rebooting
+      local_action: wait_for host="{{ ansible_ssh_host }}" search_regex=OpenSSH port=22 timeout=300
+
+
+
+- name: Update footlockers
+  hosts: cnvm
+  remote_user: cnvm
+  vars:
+    source_dir: "{{ ansible_user_dir }}/development/src"
+  tasks:
     - name: Install packages (this always displays 'changed' due to https://github.com/ansible/ansible-modules-core/issues/1230)
       sudo: yes
       apt: name={{ item }}
@@ -170,16 +191,6 @@
 
     - name: Touch UNCONFIGURED file
       file: dest={{ ansible_user_dir }}/UNCONFIGURED state=touch
-
-    - name: Rebooting
-      command: /sbin/shutdown -r +1
-      async: 0
-      poll: 0
-      ignore_errors: true
-      sudo: yes
-      
-    - name: wait for the server to finish rebooting
-      local_action: wait_for host="{{ ansible_ssh_host }}" search_regex=OpenSSH port=22 timeout=300
 
   handlers:
     - name: Restart docker
