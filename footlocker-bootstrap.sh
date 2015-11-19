@@ -108,6 +108,7 @@ if [ $1 = "hybrid-demo" ] ; then
 	vagrant up cnvm-host-02 --provider=$3
 #	export providertype=$3 && vagrant reload cnvm-host-02
 else
+	export NUM_FOOTLOCKERS=$2
 	vagrant up --provider=$1 && export providertype=$1
 #	vagrant reload
 fi
