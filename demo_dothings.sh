@@ -12,7 +12,7 @@ export ip=100
 for i in 1 2 3 4 5 7 8 9  ; do
 	count=1
 	while [ ${count} -lt 11 ] ; do
-        echo "deploysneaker cnvm@10.100.101.${i} stlalpha/myphusion:stockticker 10.100.101.${ip}"
+        echo "deploysneaker cnvm@10.100.101.${i} stlalpha/myphusion:stockticker sneaker${ip}.gonkulator.io 10.100.101.${ip}/24"
 	((count++))
 	((ip++))
 	done
