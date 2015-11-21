@@ -59,7 +59,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
 ----
 
-#### Let's get started with the hybrid-cloud-method!
+#### Let's get started with the hybrid-cloud-method! (note you can replace aws with any provider in the below example as long as you have the environment variables configured appropriately)
 
 1. Set the following environment variables to reflect the correct settings for your AWS account
 
@@ -80,7 +80,7 @@ The Cloud Native VM platform allows you to deploy Virtual Machines that are:
 
    *user@workstation:~$:* `cd cnvm`
  
-   *user@workstation:~/cnvm$:* `./footlocker-bootstrap.sh hybrid-demo`
+   *user@workstation:~/cnvm$:* `./footlocker-bootstrap.sh hybrid-demo virtualbox aws`
 
 4. This will kick off the build of 3 hosts.  A build host (in virtualbox, in your workstation), and two footlockers (one in virtualbox and one up at AWS).  A footlocker is a host that is prepped to host cnvms.  This step will take approximately 10 minutes depending on your local workstation horsepower and network connectivity.  When completed you will be returned to the prompt, and you may then log into cnvm-host-01 to deploy your first cnvm:
 
