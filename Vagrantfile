@@ -89,28 +89,26 @@ end
 ssh_port = 22
   
 
-
-#if File.exist?(CONFIG)
-#  require CONFIG
-#end
-
 Vagrant.configure("2") do |config|
 
 config.vm.box = "boxcutter/ubuntu1504"
 config.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
 config.vm.boot_timeout = 1000
 
-
   config.vm.provider :vmware_fusion do |vb, override|
   override.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
   end
+
+  #config.vm.provider :virtualbox do |vb, override|
+  #  override.vm.box = "bento/ubuntu-15.04"
+  #end
   
 	
  ["google"].each do |google|
 	config.vm.provider google do |z, override|
-        override.vm.box = "gce"
+  override.vm.box = "gce"
 	override.vm.box_url = "https://github.com/mitchellh/vagrant-google/raw/master/google.box"
-	override.vm.box_version = ""
+	#override.vm.box_version = ""
 	end
      end
      
@@ -119,7 +117,7 @@ config.vm.boot_timeout = 1000
        config.vm.provider digital_ocean do |z, override|
          override.vm.box = "digital_ocean"
 	       override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-	       override.vm.box_version = ""
+	       #override.vm.box_version = ""
 	    end
      end
 
@@ -128,7 +126,7 @@ config.vm.boot_timeout = 1000
 	     config.vm.provider azure do |q, override|
        override.vm.box = "azure"
 	     override.vm.box_url = "https://github.com/msopentech/vagrant-azure/raw/master/dummy.box"
-	     override.vm.box_version = ""
+	     #override.vm.box_version = ""
 	     end
      end
 
@@ -136,7 +134,7 @@ config.vm.boot_timeout = 1000
      config.vm.provider aws do |x, override|
      override.vm.box = "dummy"
      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-     override.vm.box_version = ""
+     #override.vm.box_version = ""
     end
   end
 
@@ -150,8 +148,12 @@ config.vm.boot_timeout = 1000
   (0..$num_instances-1).each do |i|
    config.vm.define vm_name = "%s-%02d" % ["cnvm-host", i] do |config|
    config.vm.hostname = vm_name
-   if provider_is_virtualbox
-    config.vm.network :private_network, ip: "172.17.8.#{i+100}"
+   if provider_is_virtualbox 
+    config.vm.network "private_network", ip: "172.17.8.#{i+100}", run: "always"
+  else 
+    if ENV['providertype'] = 'virtualbox'
+      config.vm.network "private_network", ip: "172.17.8.#{i+100}", run: "always"
+    end
   end
         ips = %x[echo #{vm_name} >> thehosts]
         ips = %x[sort -u thehosts > therunninghosts]
@@ -163,6 +165,7 @@ config.vm.boot_timeout = 1000
              "chown $SUDO_USER id_rsa*",
              "sudo apt-get update -y",
              "sudo apt-get install docker.io -y",
+             "sudo systemctl enable docker",
              "sudo usermod -aG docker $SUDO_USER",
              "sudo service docker start",
              "sudo apt-get install linux-image-extra-$(uname -r) -y"
@@ -187,6 +190,7 @@ config.vm.boot_timeout = 1000
         config.vm.provider :virtualbox do |vb, override|
           vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
           vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
+          override.vm.box = "bento/ubuntu-15.04"
         end
       end
 
@@ -202,6 +206,7 @@ config.vm.boot_timeout = 1000
         vb.gui = $vb_gui
         vb.memory = $vb_memory
         vb.cpus = $vb_cpus
+      #  config.vm.network "private_network", run: "always"
       end
 
       #disable synced folders

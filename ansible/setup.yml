@@ -46,11 +46,33 @@
       sudo: yes
       apt: update_cache=yes upgrade=dist
 
+
+    - name: Rebooting
+      command: /sbin/shutdown -r +1
+      async: 0
+      poll: 0
+      ignore_errors: true
+      sudo: yes
+
+    - pause: seconds=120
+      
+    - name: wait for the server to finish rebooting
+      local_action: wait_for host="{{ ansible_ssh_host }}" search_regex=OpenSSH port=22 timeout=300
+
+
+
+- name: Update footlockers
+  hosts: cnvm
+  remote_user: cnvm
+  vars:
+    source_dir: "{{ ansible_user_dir }}/development/src"
+  tasks:
     - name: Install packages (this always displays 'changed' due to https://github.com/ansible/ansible-modules-core/issues/1230)
       sudo: yes
       apt: name={{ item }}
       with_items:
         - docker.io
+        - linux-image-extra-{{ ansible_kernel }}
         - git
         - build-essential
         - libprotobuf-dev
@@ -60,6 +82,14 @@
         - python-protobuf
         - curl
         - nmap
+
+    - name: update ufw to allow forwarding
+      sudo: yes
+      lineinfile: dest=/etc/default/ufw regexp=DEFAULT_FORWARD_POLICY= line=DEFAULT_FORWARD_POLICY="ACCEPT"
+
+    - name: reload ufw
+      sudo: yes
+      ufw: state=reloaded
 
     - name: Clone cnvm repo
       git:
@@ -165,4 +195,6 @@
   handlers:
     - name: Restart docker
       sudo: yes
-      service: name=docker state=restarted
+      service: name=docker state=started
+
+
